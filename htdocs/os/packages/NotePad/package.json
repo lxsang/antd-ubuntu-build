@@ -1,0 +1,13 @@
+{
+    "app":"NotePad",
+    "name":"NotePad editor",
+    "description":"Basic application for text editing",
+    "info":{
+        "author": "Xuan Sang LE",
+        "email": "xsang.le@gmail.com"
+    },
+    "version":"0.1a",
+    "category":"System",
+    "iconclass":"fa fa-pencil-square-o",
+    "mimes":["text/.*"]
+}

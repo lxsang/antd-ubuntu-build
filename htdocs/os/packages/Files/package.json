@@ -1,0 +1,13 @@
+{
+    "app":"Files",
+    "name":"Files manager",
+    "description":"System files manager",
+    "info":{
+        "author": "Xuan Sang LE",
+        "email": "xsang.le@gmail.com"
+    },
+    "version":"0.1a",
+    "category":"System",
+    "iconclass":"fa fa-hdd-o",
+    "mimes":["dir"]
+}
