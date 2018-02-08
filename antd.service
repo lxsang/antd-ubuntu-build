@@ -7,7 +7,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/www
 ExecStart=/opt/www/antd
-Restart=on-abort
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
