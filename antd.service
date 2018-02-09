@@ -1,0 +1,13 @@
+[Unit]
+Description=Antd Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/www
+ExecStart=/opt/www/antd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
