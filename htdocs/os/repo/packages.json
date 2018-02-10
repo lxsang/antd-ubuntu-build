@@ -1,0 +1,74 @@
+[
+  {
+    "className": "ApplicationAceEditor",
+    "name": "Source editor",
+    "description": "Advance text editor",
+    "category": "development",
+    "author": "xsang.le@gmail.com",
+    "version": "0.1",
+    "download": "http://192.168.1.49:9191/repo/AceEditor.zip"
+  },
+  {
+    "className": "ApplicationArchiver",
+    "name": "Archiver",
+    "description": "Zip file manager",
+    "category": "utilities",
+    "author": "andersevenrud@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/Archiver.zip"
+  },
+  {
+    "className": "ApplicationCalculator",
+    "name": "Calculator",
+    "description": "Simple calculator",
+    "category": "utilities",
+    "author": "andersevenrud@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/Calculator.zip"
+  },
+  {
+    "className": "ApplicationLuaPlayground",
+    "name": "Lua Playground",
+    "description": "Server side scripting using LUA",
+    "category": "development",
+    "author": "xsang.le@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/LuaPlayground.zip"
+  },
+  {
+    "className": "ApplicationMarkOn",
+    "name": "MarkOn",
+    "description": "Advance Markdown editor and viewer",
+    "category": "office",
+    "author": "xsang.le@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/MarkOn.zip"
+  },
+  {
+    "className": "ApplicationPDFjs",
+    "name": "PDF Viewer",
+    "description": "Simple pdf viewer",
+    "category": "office",
+    "author": "andersevenrud@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/PDFjs.zip"
+  },
+  {
+    "className": "ApplicationPreview",
+    "name": "Preview",
+    "description": "Muti-media files preview",
+    "category": "multimedia",
+    "author": "andersevenrud@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/Preview.zip"
+  },
+  {
+    "className": "ApplicationwTerm",
+    "name": "wTerm",
+    "description": "Remote terminal",
+    "category": "system",
+    "author": "xsang.le@gmail.com",
+    "version": "1.0",
+    "download": "http://192.168.1.49:9191/repo/wTerm.zip"
+  }
+]
