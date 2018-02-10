@@ -87,7 +87,7 @@
       me = this;
       this.term.clear();
       this.term.focus();
-      this.socket = new WebSocket("ws://" + this._api.HOST + "/wterm");
+      this.socket = new WebSocket("wss://" + this._api.HOST + "/wterm");
       this.socket.onopen = function() {
         me.resizeContent(($(me.mterm)).width(), ($(me.mterm)).height());
         return me.term.focus();

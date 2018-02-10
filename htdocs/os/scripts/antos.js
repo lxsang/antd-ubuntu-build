@@ -371,7 +371,7 @@
 
   self.OS.API.HOST = self.location.hostname + (self.location.port ? ":" + self.location.port : "");
 
-  self.OS.API.REST = "http://" + self.OS.API.HOST + "/lua-api";
+  self.OS.API.REST = "https://" + self.OS.API.HOST + "/lua-api";
 
   _REST = self.OS.API.REST;
 
