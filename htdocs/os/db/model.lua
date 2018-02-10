@@ -1,7 +1,8 @@
 local model = {}
-sqlite.getdb(SESSION.iotos_user)
-model.get = function(tbl, data)
-    local db = DBModel:new{name=tbl}
+
+model.get = function(name, tbl, data)
+    local db = DBModel:new{db = name, name=tbl}
+    db:open()
     if db:available() then return db end
     if data == nil then return nil end
     local meta = {}

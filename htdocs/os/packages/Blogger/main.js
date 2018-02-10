@@ -16,6 +16,7 @@
       me = this;
       this.tabbar = this.find("tabbar");
       this.containers = [this.find("user-container"), this.find("cv-container"), this.find("blog-container")];
+      this.user = {};
       this.cvlist = this.find("cv-list");
       this.bloglist = this.find("blog-list");
       this.tabbar.set("onlistselect", function(e) {
@@ -25,6 +26,7 @@
           el = ref[i];
           ($(el)).hide();
         }
+        me.fetchData(e.idx);
         return ($(me.containers[e.idx])).show();
       });
       this.tabbar.set("items", [
@@ -42,20 +44,45 @@
       });
     };
 
+    Blogger.prototype.fetchData = function(idx) {
+      var db, me;
+      me = this;
+      switch (idx) {
+        case 0:
+          db = new this._api.DB("user");
+          return db.get(null, function(d) {
+            var i, inputs, len, results, v;
+            if (d.error) {
+              return me.error("Cannot fetch user data");
+            }
+            me.user = d.result[0];
+            inputs = me.select("[imput-class='user-input']");
+            results = [];
+            for (i = 0, len = inputs.length; i < len; i++) {
+              v = inputs[i];
+              results.push(($(v)).val(me.user[v.name]));
+            }
+            return results;
+          });
+        default:
+          return console.log("Not implemented yet");
+      }
+    };
+
     Blogger.prototype.saveUser = function() {
-      var data, db, i, inputs, len, me, v;
+      var db, i, inputs, len, me, v;
       me = this;
       inputs = this.select("[imput-class='user-input']");
-      data = {};
       for (i = 0, len = inputs.length; i < len; i++) {
         v = inputs[i];
-        data[v.name] = ($(v)).val();
+        this.user[v.name] = ($(v)).val();
       }
-      if (!data.fullname || data.fullname === "") {
+      if (!this.user.fullname || this.user.fullname === "") {
         return this.notify("Full name must be entered");
       }
       db = new this._api.DB("user");
-      return db.save(data, function(r) {
+      console.log(this.user);
+      return db.save(this.user, function(r) {
         if (r.error) {
           return me.error("Cannot save user data");
         }

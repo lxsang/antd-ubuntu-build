@@ -503,7 +503,7 @@
       var path;
       path = _REST + "/db/" + cmd;
       return _API.post(path, d, c, function(e, s) {
-        return _courrier.osfail("Fail to query data from database: " + p, e, s);
+        return _courrier.osfail("Fail to query data from database: " + path, e, s);
       });
     }
   };
@@ -1380,7 +1380,6 @@
         iconclass: "fa fa-user-times"
       });
       menu.onmenuselect = function(d) {
-        console.log(d);
         if (d.item.data.dataid === "sys-logout") {
           return _API.handler.logout();
         }

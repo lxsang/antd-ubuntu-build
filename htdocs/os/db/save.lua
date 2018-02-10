@@ -1,17 +1,18 @@
 auth_or_die("User unauthorized. Please login")
 local rq = (JSON.decodeString(REQUEST.query.json))
 if(rq ~= nil and rq.table ~= nil) then
-    local model = require("db.model").get(rq.table, rq.data)
+    local model = require("db.model").get(SESSION.iotos_user,rq.table, rq.data)
     local ret
     if model == nil then
         fail("Cannot get table metadata:"..rq.table)
     else
-        if(rq.data.id ~= nil and rq.data.id > 0) then
+        if(rq.data.id ~= nil ) then
+            rq.data.id = tonumber(rq.data.id)
             ret = model:update(rq.data)
         else
             ret = model:insert(rq.data)
         end
-        sqlite.dbclose()
+        model:close()
         if ret == true then
             result(ret)
         else
