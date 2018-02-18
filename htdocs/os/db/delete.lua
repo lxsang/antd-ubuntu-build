@@ -7,10 +7,15 @@ if(rq ~= nil and rq.table ~= nil) then
         fail("Cannot get table metadata:"..rq.table)
     else
         if(rq.id == nil ) then
-            model:close()
-            return fail("Unknow element to delete")
+            if(rq.cond) then
+                ret = model:delete(rq.cond)
+                model:close()
+            else
+                model:close()
+                return fail("Unknow element to delete")
+            end
         else
-            ret = model:delete(rq.id)
+            ret = model:deleteByID(rq.id)
             model:close()
         end
         

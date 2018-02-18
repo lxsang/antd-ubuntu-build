@@ -635,7 +635,7 @@
             var tdata = {}
             tdata.name = self.path
             tdata.nodes = getTreeData(self.data)
-            self.refs.treeview.root.set("*", tdata)
+            self.refs.treeview.root.set("data", tdata)
         }
         var getTreeData = function(data)
         {
@@ -723,20 +723,21 @@
             self.refs.treeview.ontreeselect = function(d)
             {
                 if(!d) return;
-                if(!d.data)// select the root
+                var data;
+                var el = d;
+                if(d.treepath == 0)// select the root
                 {
-                    var r = self.path.asFileHandler()
-                    r.size = 0
-                    r.filename = r.path
-                    d.data = { child: r , i:0  }
+                    el = self.path.asFileHandler()
+                    el.size = 0
+                    el.filename = el.path
                 }
-                var data = {id:self.rid, data:d.data.child, idx:d.data.i}
+                var data = {id:self.rid, data:el}
                 self.root.observable.trigger("fileselect",data)
             }
             self.refs.treeview.ontreedbclick = function(d)
             {
-                if(!d.data) return;
-                var data = {id:self.rid, data:d.data.child, idx:d.data.i}
+                if(!d || d.treepath == 0) return;
+                var data = {id:self.rid, data:d}
                 self.root.observable.trigger("filedbclick",data)
             }
             self.root.observable.on("fileselect", function(e){
@@ -1205,6 +1206,8 @@
                     if(dw)
                     {
                         if(dw == "grow") return
+                        if(dw[dw.length-1] === "%")
+	                        dw = Number(dw.slice(0,-1))*avaiWidth/100;
                         $(this).css("width",dw + "px")
                         ocwidth += Number(dw)
                     }
@@ -1216,10 +1219,11 @@
                     }
                 })
             csize = (avaiWidth - ocwidth)/ (auto_width.length)
-            $.each(auto_width, function(i,v)
-            {
-                $(v).css("width", csize + "px")
-            })
+            if(csize > 0)
+                $.each(auto_width, function(i,v)
+                {
+                    $(v).css("width", csize + "px")
+                })
             self.root.observable.trigger("hboxchange",
                 {id:self.rid, w:csize, h:avaiheight})
         }
@@ -1266,6 +1270,9 @@
         <li each={item,i in items } class={selected: parent._autoselect(item,i)} ondblclick = {parent._dbclick}  onclick = {parent._select} oncontextmenu = {parent._select}>
             <afx-label color = {item.color} iconclass = {item.iconclass} icon = {item.icon} text = {item.text}></afx-label>
             <i if = {item.closable} class = "closable" click = {parent._remove}></i>
+            <ul if = {item.complex} class = "complex-content">
+                <li each = {ctn,j in item.detail} class = {ctn.class}>{ctn.text}</li>
+            </ul>
         </li>
     </ul>
     </div>
@@ -1900,42 +1907,46 @@
 </afx-tab-container>
 <afx-tree-view>
 
-  <div class={afx_tree_item_selected:treeroot.selectedItem && treeroot.selectedItem.path == path, afx_folder_item: isFolder(), afx_tree_item_odd: index%2 != 0  } onclick={select} ondblclick = {_dbclick} oncontextmenu = {select}>
+  <div class={afx_tree_item_selected:treeroot.selectedItem && treeroot.selectedItem.treepath == data.treepath, afx_folder_item: isFolder(), afx_tree_item_odd: index%2 != 0  } onclick={select} ondblclick = {_dbclick} oncontextmenu = {select}>
     <ul style = "padding:0;margin:0;white-space: nowrap;">
         <li ref = "padding" ></li>
         <li class = "itemname" style="display:inline-block;" >
-            <i if={ !isFolder() && iconclass} class = {iconclass} ></i>
-            <i if={!isFolder() && icon} class="icon-style" style = { "background: url("+icon+");background-size: 100% 100%;background-repeat: no-repeat;" }></i>
+            <i if={ !isFolder() && data.iconclass} class = {data.iconclass} ></i>
+            <i if={!isFolder() && data.icon} class="icon-style" style = { "background: url("+data.icon+");background-size: 100% 100%;background-repeat: no-repeat;" }></i>
 
             <span onclick={ toggle } if={ isFolder() } class={open ? 'afx-tree-view-folder-open' : 'afx-tree-view-folder-close'}></span>
-            { name }
+            { data.name }
         </li>
     </ul>
   </div>
 
 
   <ul if={ isFolder() } show={ isFolder() && open }>
-    <li each={ child, i in nodes }>
-      <afx-tree-view ontreeselect = {parent.ontreeselect} fetch = {parent.fetch} ontreedbclick = {parent.ontreedbclick} data={child} indent={indent+1} observable = {parent.root.observable} path = {parent.path + ">" + i} treeroot= {parent.treeroot}></afx-tree-view>
+    <li each={ child, i in data.nodes }>
+      <afx-tree-view ontreeselect = {parent.ontreeselect} index = {i} fetch = {parent.fetch} ontreedbclick = {parent.ontreedbclick} data={child} indent={indent+1} observable = {parent.root.observable} path = {parent.data.treepath + ">" + i} treeroot= {parent.treeroot}></afx-tree-view>
     </li>
   </ul>
 
     <script>
         var self = this
         self.open = true
+        self.data = { name:"", nodes:null, treepath: opts.path, i:-1}
         if(opts.data)
         {
-            self.name = opts.data.name
-            self.nodes = opts.data.nodes
-            self.icon = opts.data.icon
+            self.data = opts.data
+            //self.name = opts.data.name
+            //self.nodes = opts.data.nodes
+            //self.icon = opts.data.icon
             self.open = opts.data.open == undefined?true:opts.data.open
-            self.iconclass = opts.data.iconclass  
+            //self.iconclass = opts.data.iconclass  
         }
-        this.rid = $(self.root).attr("data-id") || Math.floor(Math.random() * 100000) + 1
+        self.rid = $(self.root).attr("data-id") || Math.floor(Math.random() * 100000) + 1
+        self.data.rid = self.rid
+        self.data.i = opts.index
         self.ontreeselect = opts.ontreeselect
         self.ontreedbclick = opts.ontreedbclick
         self.fetch = opts.fetch
-        self.indent = opts.indent || 1
+        self.indent = opts.indent || 0
         var istoggle = false
         if(opts.treeroot)
         {
@@ -1947,21 +1958,48 @@
             this.treeroot = self
             this.treeroot.counter = 0
         }
-        self.path = opts.path || 0
-        self.selected = false
+        self.data.treepath = opts.path || 0
+        //self.selected = false
         self.selectedItem = null
         self.index = this.treeroot.counter
+        
+        var _dfind = function(l,d, k, v)
+        {
+            if( d[k] == v ) return l.push(d)
+            if(d.nodes && d.nodes.length > 0)
+                for(var i in d.nodes)
+                    _dfind(l, d.nodes[i],k,v)
+        }
+        self.root.find = function(k, v)
+        {
+            var l = []
+            _dfind(l,self.data,k,v)
+            return l
+        }
+
         self.root.set = function(k,v)
         {
             if(k == "*")
                 for(var i in v)
                     self[i] = v[i]
+            else if (k == "data")
+                for(var i in v)
+                    self.data[i] = v[i]
+            else if (k == "selectedItem")
+            {
+                if(self.ontreeselect)
+                    self.ontreeselect(self.data)
+                self.treeroot.selectedItem = v
+                self.root.observable.trigger('treeselect',self.data)
+            }
             else
                 self[k] = v
             self.update()
         }
         self.root.get = function(k)
         {
+            //if(k == "data")
+            //    return {name:self.name, nodes: self.nodes, icon:self.icon, iconclass: self.iconclass, selectedItem:self.selectedItem}
             return self[k]
         }
 
@@ -1983,18 +2021,21 @@
         })
 
         isFolder() {
-            return self.nodes //&& self.nodes.length
+            return self.data.nodes //&& self.nodes.length
         }
 
         toggle(e) {
             self.open = !self.open
             e.preventDefault()
             istoggle = true
-            if(self.open && self.nodes.length == 0 && self.fetch)
+
+            if(self.open && self.data.nodes.length == 0 && self.fetch)
+            {
                 self.fetch(e.item, function(d){
-                    self.nodes = d
+                    self.data.nodes = d
                     self.update()
                 })
+            }
         }
         
         select(event)
@@ -2004,15 +2045,15 @@
                 istoggle = false 
                 return
             }
-            var data = {
+            /*var data = {
                 id:self.rid, 
                 data:event.item,
-                path:self.path
-            } 
+                path:self.data.path
+            } */
             if(self.ontreeselect)
-                self.ontreeselect(data)
-            self.treeroot.selectedItem = data
-           this.root.observable.trigger('treeselect',data)
+                self.ontreeselect(self.data)
+            self.treeroot.selectedItem = self.data
+           this.root.observable.trigger('treeselect',self.data)
            event.preventUpdate = true
            self.treeroot.update()
            event.preventDefault()
@@ -2024,15 +2065,15 @@
                 istoggle = false 
                 return
             }
-            data =  {
+            /*data =  {
                     id:self.rid, 
                     data:event.item,
-                    path: self.path}
+                    path: self.data.path}*/
             if(self.ontreedbclick)
             {
-                self.ontreedbclick(data)
+                self.ontreedbclick(self.data)
             }
-            self.root.observable.trigger('treedbclick', data)
+            self.root.observable.trigger('treedbclick', self.data)
         }
     </script>
 </afx-tree-view>
@@ -2081,6 +2122,8 @@
                     if(dw)
                     {
                         if(dw == "grow") return
+                        if(dw[dw.length-1] === "%")
+	                        dw = Number(dw.slice(0,-1))*avaiheight/100;
                         $(this).css("height",dw + "px")
                         ocheight += Number(dw)
                     }
@@ -2092,10 +2135,11 @@
                     }
                 })
             csize = (avaiheight - ocheight)/ (auto_height.length)
-            $.each(auto_height, function(i,v)
-            {
-                $(v).css("height", csize + "px")
-            })
+            if(csize > 0)
+                $.each(auto_height, function(i,v)
+                {
+                    $(v).css("height", csize + "px")
+                })
             self.root.observable.trigger("vboxchange",
                 {id:self.rid, w:avaiwidth, h:csize})
         }

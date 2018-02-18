@@ -46,7 +46,22 @@ function DBModel:getAll()
 end
 
 function DBModel:find(cond)
-	return sqlite.select(self.db, self.name, cond)
+	local cnd = "1=1"
+	if cond.exp then
+		cnd = self:gencond(cond.exp)
+	end
+	if cond.order then
+		cnd = cnd.." ORDER BY "
+		local l = {}
+		local i = 1
+		for k,v in pairs(cond.order) do
+			l[i] = k.." "..v
+			i = i+1
+		end
+		cnd = cnd..table.concat(l, ",")
+	end
+	--print(cnd)
+	return sqlite.select(self.db, self.name, cnd)
 end
 
 function DBModel:query(sql)
@@ -73,8 +88,33 @@ end
 function DBModel:available()
 	return sqlite.hasTable(self.db, self.name) == 1
 end
-function DBModel:delete(id)
+function DBModel:deleteByID(id)
 	local sql = "DELETE FROM "..self.name.." WHERE id="..id..";"
+	return sqlite.query(self.db, sql) == 1
+end
+function DBModel:gencond(o)
+	for k,v	in pairs(o) do
+		if k == "and" or k == "or" then
+			local cnd = {}
+			local i = 1
+			for k1,v1 in pairs(v) do
+				cnd[i] = self:gencond({[k1]=v1})
+				i = i + 1
+			end
+			return " ("..table.concat(cnd, " "..k.." ")..") "
+		else
+			for k1,v1 in pairs(v) do
+				local t = type(v1)
+				if(t == "string") then
+					return " ("..k1.." "..k..' "'..v1:gsub('"','\\"')..'") '
+				end
+				return  " ("..k1.." "..k.." "..v1..") "
+			end 
+		end
+	end
+end
+function DBModel:delete(cond)
+	local sql = "DELETE FROM "..self.name.." WHERE "..self:gencond(cond)..";"
 	return sqlite.query(self.db, sql) == 1
 end
 

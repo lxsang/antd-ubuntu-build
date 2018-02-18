@@ -37,6 +37,7 @@ function auth_or_die(msg)
 	SESSION.iotos_user = data[0].username
 	--print("Go for new thing")
 end
+-- test only
 
 if has_module("os/"..REQUEST.path) then
 	-- run the correct module

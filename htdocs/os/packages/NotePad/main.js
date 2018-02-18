@@ -465,6 +465,8 @@
 
   NotePad.singleton = false;
 
+  NotePad.dependencies = ["ace/ace", "ace/ext-language_tools", "ace/ext-modelist", "ace/ext-themelist"];
+
   this.OS.register("NotePad", NotePad);
 
 }).call(this);

@@ -43,7 +43,7 @@
         nodes: [
           {
             name: 'hello',
-            icon: 'fa fa-car'
+            iconclass: 'fa fa-car'
           }, {
             name: 'wat'
           }, {
@@ -76,7 +76,7 @@
           }
         ]
       };
-      tree.set("*", tdata);
+      tree.set("data", tdata);
       list = this.find("mylist");
       ldata = [
         {
@@ -92,7 +92,14 @@
         }, {
           text: "some thing"
         }, {
-          text: "some thing"
+          text: "some thing",
+          complex: true,
+          detail: [
+            {
+              text: "Inner content",
+              "class": ""
+            }
+          ]
         }, {
           text: "some thing"
         }, {
