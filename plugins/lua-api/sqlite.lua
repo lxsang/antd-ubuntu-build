@@ -26,7 +26,7 @@ function DBModel:insert(m)
 			if type(v) == "number" then
 				table.insert(values, v)
 			else
-				local t = "\""..utils.escape(v).."\""
+				local t = "\""..v:gsub('"', '""').."\""
 				table.insert(values,t)
 			end
 		end
@@ -76,7 +76,7 @@ function DBModel:update(m)
 			if(type(v)== "number") then
 				table.insert(lst,k.."="..v)
 			else
-				table.insert(lst,k.."=\""..utils.escape(v).."\"")
+				table.insert(lst,k.."=\""..v:gsub('"', '""').."\"")
 			end
 		end
 		local sql = "UPDATE "..self.name.." SET "..table.concat(lst,",").." WHERE id="..id..";"
@@ -106,7 +106,7 @@ function DBModel:gencond(o)
 			for k1,v1 in pairs(v) do
 				local t = type(v1)
 				if(t == "string") then
-					return " ("..k1.." "..k..' "'..v1:gsub('"','\\"')..'") '
+					return " ("..k1.." "..k..' "'..v1:gsub('"','""')..'") '
 				end
 				return  " ("..k1.." "..k.." "..v1..") "
 			end 
