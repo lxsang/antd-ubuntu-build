@@ -77,7 +77,7 @@
       this.view.set("onfileselect", function(e) {
         var file, j, len, ref, results, v;
         file = me.view.get("selectedFile");
-        if (!file) {
+        if (!(file && file.mime)) {
           return;
         }
         if (file.type === "dir") {
