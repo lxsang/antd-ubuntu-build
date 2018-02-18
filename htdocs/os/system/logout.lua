@@ -6,7 +6,8 @@ if SESSION.sessionid ~= nil and SESSION.sessionid ~= '0' then
 		--if data and data[0] ~= nil then
 		--	db:delete(data[0].id)
 		--end
-		db:delete("sessionid = '"..SESSION.sessionid.."'")
+		local cond = {["="] = { sessionid = SESSION.sessionid }}
+		db:delete(cond)
 		db:close()
 	end
 	std.cjson(cookie)

@@ -30,7 +30,9 @@ function auth_or_die(msg)
 	-- query session id from database
 	local db = sysdb()
 	if db == nil then die(msg.." - Cannot get system database") end
-	local data = db:find("sessionid ='"..SESSION.sessionid.."'")
+	local cond = {exp= {["="] = { sessionid = SESSION.sessionid }}}
+	local data = db:find(cond)
+	--print(JSON.encode(data))
 	db:close()
 	if data == nil or data[0] == nil then die(msg) end
 	-- next time check the stamp
