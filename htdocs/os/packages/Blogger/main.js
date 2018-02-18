@@ -557,6 +557,9 @@
       me = this;
       return this.blogdb.get(null, function(r) {
         var i, len, ref, v;
+        if (r.error) {
+          return me.notify("No post found: " + r.error);
+        }
         ref = r.result;
         for (i = 0, len = ref.length; i < len; i++) {
           v = ref[i];
