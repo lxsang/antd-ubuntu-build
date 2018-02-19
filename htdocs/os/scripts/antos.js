@@ -516,11 +516,12 @@
         return _courrier.osfail("Fail to create directory: " + p, e, s);
       });
     },
-    sharefile: function(p, c) {
+    sharefile: function(p, pub, c) {
       var path;
       path = _REST + "/fs/publish";
       return _API.post(path, {
-        path: p
+        path: p,
+        publish: pub
       }, c, function(e, s) {
         return _courrier.osfail("Fail to publish file: " + p, e, s);
       });
@@ -925,7 +926,7 @@
         case "remove":
           return _API.handler["delete"](this.path, f);
         case "publish":
-          return _API.handler.sharefile(this.path, f);
+          return _API.handler.sharefile(this.path, true, f);
         case "download":
           if (this.info.type === "dir") {
             return;
@@ -1110,7 +1111,7 @@
         case "write":
           return _API.handler.write(this.path, p, f);
         case "remove":
-          return _API.handler["delete"](this.path, f);
+          return _API.handler.sharefile(this.basename, false, f);
         case "upload":
           break;
         case "publish":
