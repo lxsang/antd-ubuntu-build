@@ -133,7 +133,6 @@
       return dir.read(function(d) {
         if (d.error) {
           return me.error("Resource not found " + p);
-          console.log("error");
         }
         me.currdir = dir;
         if (!dir.isRoot()) {
@@ -170,6 +169,9 @@
           }, {
             text: "Download",
             dataid: this.name + "-download"
+          }, {
+            text: "Share file",
+            dataid: this.name + "-share"
           }, {
             text: "Properties",
             dataid: this.name + "-info"
@@ -421,6 +423,17 @@
             if (r.error) {
               return me.error("Faile to upload to: " + d + ": " + r.error);
             }
+          });
+        case this.name + "-share":
+          me = this;
+          if (!(file && file.type === "file")) {
+            return;
+          }
+          return file.path.asFileHandler().publish(function(r) {
+            if (r.error) {
+              return me.error("Cannot share file: " + r.error);
+            }
+            return me.notify("Shared url: " + r.result);
           });
         case this.name + "-download":
           if (!file) {

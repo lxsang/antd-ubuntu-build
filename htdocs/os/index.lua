@@ -40,13 +40,13 @@ function auth_or_die(msg)
 	--print("Go for new thing")
 end
 -- test only
-
 if has_module("os/"..REQUEST.path) then
 	-- run the correct module
 	require("os/"..REQUEST.path)
 else
 	local hstr = REQUEST.path:match("^%a+/")
 	if hstr == "fs/" then
+		--print("require module")
 		require("fs.fsh")(REQUEST.path:gsub(hstr,"",1))
 	else
 		if utils.file_exists(__ROOT__..'/'..REQUEST.path) then

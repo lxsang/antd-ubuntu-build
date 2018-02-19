@@ -11,7 +11,7 @@ vfs.ospath = function(path)
 		elseif prefix == "desktop://" then
 			return string.format(conf.home,user).."/.desktop/"..suffix
 		elseif prefix == "shared://" then
-			return string.format(conf.shared,user)..'/'..suffix 
+			return require("fs.shared").ospath(std.trim(suffix,"/")) 
 		elseif prefix == "os://" then
 			return OSROOT..suffix
 		else
@@ -155,7 +155,7 @@ vfs.checkperm = function(path, right)
 			return true,osfile
 		else
 			print("Permission denie")
-			return false,"You dont have "..right.." permission to read this file"
+			return false,"You dont have "..right.." permission on this file"
 		end
 	else
 		return false,"User is unrecognized"

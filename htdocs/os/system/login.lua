@@ -9,11 +9,11 @@ if REQUEST.query.json ~= nil then
 		local data = db:find(cond)
 		--print(data)
 		if data == nil or data[0] == nil then
-			print("insert new data")
+			--print("insert new data")
 			data = {sessionid = cookie.sessionid, username=request.username, stamp=os.time(os.date("!*t"))}
 		else
 			data = data[0]
-			print("Update old data")
+			--print("Update old data")
 			data.stamp = os.time(os.date("!*t"))
 		end
 		if data.id == nil then

@@ -317,10 +317,15 @@
             name: "image",
             className: "fa fa-file-image-o",
             action: function(e) {
-              return me.openDialog("FileDiaLog", function(d, n) {
-                var doc;
-                doc = me.editor.codemirror.getDoc();
-                return doc.replaceSelection("![](" + me._api.handler.get + "/" + d + "/" + n + ")");
+              return me.openDialog("FileDiaLog", function(d, n, p) {
+                return p.asFileHandler().publish(function(r) {
+                  var doc;
+                  if (r.error) {
+                    return me.error("Cannot export file for embeding to text");
+                  }
+                  doc = me.editor.codemirror.getDoc();
+                  return doc.replaceSelection("![](" + me._api.handler.shared + "/" + r.result + ")");
+                });
               }, "Select image file", {
                 mimes: ["image/.*"]
               });

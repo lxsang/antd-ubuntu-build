@@ -6,6 +6,7 @@ function std.extra_mime(name)
 	elseif ext == "cpp" or ext == "hpp" then return "text/cpp",false
 	elseif ext == "md" then return "text/markdown",false
 	elseif ext == "lua" then return "text/lua",false
+	elseif ext == "yaml" then return "application/x-yaml", false
 	else 
 		return "application/octet-stream",true
 	end
