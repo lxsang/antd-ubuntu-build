@@ -1394,21 +1394,8 @@
       }
       js = path + "/main.js";
       return js.asFileHandler().read(function(d) {
-        var css;
-        css = path + "/main.css";
-        css.asFileHandler().onready(function(d) {
-          var el;
-          el = $('<link>', {
-            rel: 'stylesheet',
-            type: 'text/css',
-            'href': _API.handler.get + "/" + css
-          }).appendTo('head');
-          if (_OS.APP[app]) {
-            return _OS.APP[app].style = el[0];
-          }
-        }, function() {});
         return (path + "/package.json").asFileHandler().read(function(data) {
-          var j, len, ref, v;
+          var css, j, len, ref, v;
           data.path = path;
           if (_OS.APP[app]) {
             _OS.APP[app].meta = data;
@@ -1420,7 +1407,21 @@
               _OS.APP[v].meta = data;
             }
           }
-          return ok(app);
+          css = path + "/main.css";
+          return css.asFileHandler().onready(function(d) {
+            var el;
+            el = $('<link>', {
+              rel: 'stylesheet',
+              type: 'text/css',
+              'href': _API.handler.get + "/" + css
+            }).appendTo('head');
+            if (_OS.APP[app]) {
+              _OS.APP[app].style = el[0];
+            }
+            return ok(app);
+          }, function() {
+            return ok(app);
+          });
         }, "json");
       }, "script");
     },
