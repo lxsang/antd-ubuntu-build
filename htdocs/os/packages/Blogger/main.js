@@ -103,6 +103,17 @@
       var i, inputs, len, me, v;
       me = this;
       this.scheme.set("apptitle", this.title);
+      this.editor = new SimpleMDE({
+        element: this.find("contentarea"),
+        status: false,
+        toolbar: false
+      });
+      ($((this.select('[class = "CodeMirror-scroll"]'))[0])).css("min-height", "50px");
+      ($((this.select('[class="CodeMirror cm-s-paper CodeMirror-wrap"]'))[0])).css("min-height", "50px");
+      this.on("vboxchange", function() {
+        me.resizeContent();
+        return console.log("resize content");
+      });
       inputs = me.select("[input-class='user-input']");
       if (me.data) {
         for (i = 0, len = inputs.length; i < len; i++) {
@@ -110,7 +121,10 @@
           ($(v)).val(me.data[v.name]);
         }
       }
-      return (this.find("bt-cv-sec-save")).set("onbtclick", function(e) {
+      if (me.data && me.data.content) {
+        this.editor.value(me.data.content);
+      }
+      (this.find("bt-cv-sec-save")).set("onbtclick", function(e) {
         var data, j, len1;
         data = {};
         console.log(inputs);
@@ -118,6 +132,7 @@
           v = inputs[j];
           data[v.name] = ($(v)).val();
         }
+        data.content = me.editor.value();
         if (data.title === "") {
           return me.notify("Title must not be blank");
         }
@@ -132,6 +147,15 @@
         }
         return me.quit();
       });
+      return me.resizeContent();
+    };
+
+    BloggerCVSectionDiaglog.prototype.resizeContent = function() {
+      var cheight, children, container;
+      container = this.find("editor-container");
+      children = ($(container)).children();
+      cheight = ($(container)).height() - 30;
+      return ($(children[1])).css("height", cheight + "px");
     };
 
     return BloggerCVSectionDiaglog;
