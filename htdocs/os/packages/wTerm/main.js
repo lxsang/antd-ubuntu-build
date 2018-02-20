@@ -83,11 +83,12 @@
     };
 
     wTerm.prototype.openSession = function() {
-      var me;
+      var me, proto;
       me = this;
       this.term.clear();
       this.term.focus();
-      this.socket = new WebSocket("wss://" + this._api.HOST + "/wterm");
+      proto = window.location.protocol === "https:" ? "wss://" : "ws://";
+      this.socket = new WebSocket(proto + this._api.HOST + "/wterm");
       this.socket.onopen = function() {
         me.resizeContent(($(me.mterm)).width(), ($(me.mterm)).height());
         return me.term.focus();

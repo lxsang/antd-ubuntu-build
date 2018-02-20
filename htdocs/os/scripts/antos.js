@@ -491,7 +491,7 @@
 
   self.OS.API.HOST = self.location.hostname + (self.location.port ? ":" + self.location.port : "");
 
-  self.OS.API.REST = self.location.protocol + "//" + self.OS.API.HOST + "/lua-api";
+  self.OS.API.REST = self.location.protocol + "//" + self.OS.API.HOST + "/lua-api/os";
 
   _REST = self.OS.API.REST;
 
@@ -1460,6 +1460,22 @@
       });
       return app.init();
     },
+    enterFullscreen: function() {
+      var el;
+      el = ($("body"))[0];
+      if (el.requestFullscreen) {
+        return el.requestFullscreen();
+      }
+      if (el.mozRequestFullScreen) {
+        return el.mozRequestFullScreen();
+      }
+      if (el.webkitRequestFullscreen) {
+        return el.webkitRequestFullscreen();
+      }
+      if (el.msRequestFullscreen) {
+        return el.msRequestFullscreen();
+      }
+    },
     undock: function(app) {
       return ($("#sysdock")).get(0).removeapp(app);
     },
@@ -1666,6 +1682,11 @@
         return results;
       })());
       menu.child.push({
+        text: "Full screen",
+        dataid: "os-fullsize",
+        iconclass: "fa fa-tv"
+      });
+      menu.child.push({
         text: "Log out",
         dataid: "sys-logout",
         iconclass: "fa fa-user-times"
@@ -1673,6 +1694,9 @@
       menu.onmenuselect = function(d) {
         if (d.item.data.dataid === "sys-logout") {
           return _API.handler.logout();
+        }
+        if (d.item.data.dataid === "os-fullsize") {
+          return _GUI.enterFullscreen();
         }
         if (!d.item.data.dataid) {
           return _GUI.launch(d.item.data.app);
