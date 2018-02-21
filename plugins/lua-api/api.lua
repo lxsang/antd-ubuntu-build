@@ -123,4 +123,4 @@ end
 -- enable extra mime
 
 -- run the file
-require('index')
+require('router')

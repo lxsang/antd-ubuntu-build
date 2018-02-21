@@ -19,6 +19,12 @@ function die (msg)
   debug.traceback=nil
   error("Permission denied")
 end
+
+-- test only
+if REQUEST.path:match("/*router%.lua") or REQUEST.path:match("/*router") then
+    die("Recursive call to index.lua is not allown")
+end
+
 -- check if the sysdb is create, otherwise create the table
 function sysdb()
 	local meta = {}
@@ -42,10 +48,7 @@ function auth_or_die(msg)
 	SESSION.iotos_user = data[0].username
 	--print("Go for new thing")
 end
--- test only
-if REQUEST.path == "index.lua" then
-    die("Recursive call to index.lua is not allown")
-end
+
 local m, s, p  = has_module(REQUEST.path)
 if m then
     -- run the correct module
