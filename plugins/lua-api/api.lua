@@ -54,18 +54,18 @@ function doscript(file)
                 if(s) then
                     if mtbegin then
                         if html ~= "" then
-                            pro= pro.."echo(\""..utils.escape(html).."\");"
+                            pro= pro.."echo(\""..utils.escape(html).."\")\n"
                             html = ""
                         end
                         local b,f  = line:find("%?>%s*$")
                         if b then
-                            pro = pro..line:sub(e+1,b-1)..";"
+                            pro = pro..line:sub(e+1,b-1).."\n"
                         else
-                            pro = pro..line:sub(e+1)..";"
+                            pro = pro..line:sub(e+1).."\n"
                             mtbegin = not mtbegin
                         end
                     else
-                        pro = pro..line:sub(0,s-1)..";"
+                        pro = pro..line:sub(0,s-1).."\n"
                         mtbegin = not mtbegin
                     end
                 else -- no match
@@ -78,8 +78,8 @@ function doscript(file)
                                 -- find the close
                                 local x,y = tmp:find("%?>")
                                 if x then
-                                    pro= pro.."echo(\""..utils.escape(html..tmp:sub(0,b-1)).."\");"
-                                    pro = pro.."echo("..tmp:sub(f+1,x-1)..");"
+                                    pro= pro.."echo(\""..utils.escape(html..tmp:sub(0,b-1)).."\")\n"
+                                    pro = pro.."echo("..tmp:sub(f+1,x-1)..")\n"
                                     html = ""
                                     tmp = tmp:sub(y+1)
                                     b,f = tmp:find("<%?=")
@@ -87,22 +87,32 @@ function doscript(file)
                                     error("Syntax error near line "..i)
                                 end
                             end
-                            pro= pro.."echo(\""..utils.escape(tmp).."\");"
+                            pro= pro.."echo(\""..utils.escape(tmp).."\")\n"
                         else
                             html = html..std.trim(line," ").."\n"
                         end
                     else
-                        if line ~= "" then pro = pro..line..";" end
+                        if line ~= "" then pro = pro..line.."\n" end
                     end
                 end
             end
             i = i+ 1
         end
         if(html ~= "") then
-            pro = pro.."echo(\""..utils.escape(html).."\");"
+            pro = pro.."echo(\""..utils.escape(html).."\")\n"
         end
-        --print(pro);
-        load(pro)()
+        --print(pro)
+        local  r,e = load(pro)
+        if r == nil then
+            --print(e)
+            std.t(e)
+        else
+            r,e = pcall(r)
+            if r == false then
+                --print(e)
+                std.t(e)
+            end
+        end
     end
 end
 

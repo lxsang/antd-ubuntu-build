@@ -18,8 +18,11 @@ if(rq ~= nil and rq.table ~= nil) then
             ret = model:deleteByID(rq.id)
             model:close()
         end
-        
-        result(ret)
+        if ret then
+            result(ret)
+        else
+            fail("Querry error or database is locked")
+        end
     end
 else
     fail("Unknown database request")

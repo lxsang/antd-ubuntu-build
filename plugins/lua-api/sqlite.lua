@@ -42,7 +42,13 @@ end
 
 function DBModel:getAll()
 	local sql = "SELECT * FROM "..self.name
-	return sqlite.select(self.db, self.name, "1=1")
+	--return sqlite.select(self.db, self.name, "1=1")
+	local data = sqlite.select(self.db, self.name, "1=1")
+	if data == nil then return nil end
+	local a = {}
+	for n in pairs(data) do table.insert(a, n) end
+	table.sort(a)
+	return data, a
 end
 
 function DBModel:find(cond)
@@ -61,7 +67,12 @@ function DBModel:find(cond)
 		cnd = cnd..table.concat(l, ",")
 	end
 	--print(cnd)
-	return sqlite.select(self.db, self.name, cnd)
+	local data = sqlite.select(self.db, self.name, cnd)
+	if data == nil then return nil end
+	local a = {}
+	for n in pairs(data) do table.insert(a, n) end
+	table.sort(a)
+	return data, a
 end
 
 function DBModel:query(sql)
@@ -98,7 +109,7 @@ function DBModel:gencond(o)
 			local cnd = {}
 			local i = 1
 			for k1,v1 in pairs(v) do
-				cnd[i] = self:gencond({[k1]=v1})
+				cnd[i] = self:gencond(v1)
 				i = i + 1
 			end
 			return " ("..table.concat(cnd, " "..k.." ")..") "

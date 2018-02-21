@@ -36,7 +36,7 @@
                 return d.notify("Please select a parent category");
               }
               val = (d.find("content3")).value;
-              if (val === "") {
+              if (val === "" && !d.data.selonly) {
                 return d.notify("Please enter category name");
               }
               if (d.data.cat && d.data.cat.id === sel.id) {
@@ -133,11 +133,8 @@
           data[v.name] = ($(v)).val();
         }
         data.content = me.editor.value();
-        if (data.title === "") {
-          return me.notify("Title must not be blank");
-        }
-        if (data.content === "") {
-          return me.notify("Content must not be blank");
+        if (data.title === "" && data.content === "") {
+          return me.notify("Title or content must not be blank");
         }
         if (me.data && me.data.id) {
           data.id = me.data.id;
@@ -272,7 +269,7 @@
           if (!d) {
             return;
           }
-          return console.log("delete all child + theirs content");
+          return me.deleteCVCat(cat);
         }, "Delete cagegory", {
           iconclass: "fa fa-question-circle",
           text: "Do you really want to delete: " + cat.name + " ?"
@@ -297,6 +294,30 @@
           });
         }, "New section entry for " + cat.name, null);
       });
+      (this.find("cv-sec-move")).set("onbtclick", function(e) {
+        var sec;
+        sec = (me.find("cv-sec-list")).get("selected");
+        if (!sec) {
+          return me.notify("Please select a section to move");
+        }
+        return me.openDialog("BloggerCategoryDialog", function(d) {
+          var c;
+          c = {
+            id: sec.id,
+            cid: d.p.id
+          };
+          return me.cvsecdb.save(c, function(r) {
+            if (r.error) {
+              return me.error("Cannot move section");
+            }
+            me.CVSectionByCID(sec.cid);
+            return (me.find("cv-sec-list")).set("selected", -1);
+          });
+        }, "Move to", {
+          tree: me.cvlist.get("data"),
+          selonly: true
+        });
+      });
       (this.find("cv-sec-edit")).set("onbtclick", function(e) {
         var sec;
         sec = (me.find("cv-sec-list")).get("selected");
@@ -312,7 +333,6 @@
             if (r.error) {
               return me.error("Cannot save section: " + r.error);
             }
-            console.log(d.cid);
             return me.CVSectionByCID(Number(sec.cid));
           });
         }, "Modify section entry", sec);
@@ -424,14 +444,19 @@
     };
 
     Blogger.prototype.refreshCVCat = function() {
-      var data, me;
+      var cnd, data, me;
       me = this;
       data = {
         name: "Porfolio",
         id: 0,
         nodes: []
       };
-      return this.cvcatdb.get(null, function(d) {
+      cnd = {
+        order: {
+          name: "ASC"
+        }
+      };
+      return this.cvcatdb.find(cnd, function(d) {
         if (d.error) {
           me.cvlist.set("data", data);
           return me.notify("Cannot fetch CV categories");
@@ -465,6 +490,67 @@
         results.push(data.nodes.push(v));
       }
       return results;
+    };
+
+    Blogger.prototype.deleteCVCat = function(cat) {
+      var cond, func, ids, me, v;
+      me = this;
+      ids = [];
+      func = function(c) {
+        var i, len, ref, results, v;
+        ids.push(c.id);
+        if (c.nodes) {
+          ref = c.nodes;
+          results = [];
+          for (i = 0, len = ref.length; i < len; i++) {
+            v = ref[i];
+            results.push(func(v));
+          }
+          return results;
+        }
+      };
+      func(cat);
+      cond = (function() {
+        var i, len, results;
+        results = [];
+        for (i = 0, len = ids.length; i < len; i++) {
+          v = ids[i];
+          results.push({
+            "=": {
+              cid: v
+            }
+          });
+        }
+        return results;
+      })();
+      return this.cvsecdb["delete"]({
+        "or": cond
+      }, function(r) {
+        if (r.error) {
+          return me.error("Cannot delete all content of: " + cat.name + " [" + r.error + "]");
+        }
+        cond = (function() {
+          var i, len, results;
+          results = [];
+          for (i = 0, len = ids.length; i < len; i++) {
+            v = ids[i];
+            results.push({
+              "=": {
+                id: v
+              }
+            });
+          }
+          return results;
+        })();
+        return me.cvcatdb["delete"]({
+          "or": cond
+        }, function(re) {
+          if (re.error) {
+            return me.error("Cannot delete the category: " + cat.name + " [" + re.error + "]");
+          }
+          return me.refreshCVCat();
+        });
+      });
     };
 
     Blogger.prototype.CVSectionByCID = function(cid) {
@@ -509,6 +595,11 @@
           if (v.start !== 0 && v.end !== 0) {
             v.detail.push({
               text: v.start + " - " + v.end,
+              "class": "cv-period"
+            });
+          } else {
+            v.detail.push({
+              text: "",
               "class": "cv-period"
             });
           }
