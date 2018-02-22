@@ -8,7 +8,7 @@ uman.userinfo = function(user)
 			username = user,
 			id = uid.id,
 			name = user,
-			groups = {"admin"}
+			groups = uid.groups
 		}
 		info.blacklistedPackages = {}
 		info.userSettings = {}

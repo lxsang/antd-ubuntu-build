@@ -172,7 +172,7 @@ vfs.perm = function(file)
 		if(uid.id == st.uid) then -- the user owned the file
 			print("file belong to user")
 			return st.perm.owner
-		elseif uid.gid == st.gid then
+		elseif uid.groups and uid.groups[st.gid] then
 			print("User belong to this group")	
 			return st.perm.group
 		else
