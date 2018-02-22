@@ -138,7 +138,6 @@ hr{
     display: block;
     height: 1px;
     border: 0;
-    border-top: 1px solid #e5e5e5;
-    margin: 1em 0;
+    border-top: 1px solid #878887;
     padding: 0; 
 }
