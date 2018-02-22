@@ -68,7 +68,7 @@
                                 else
                                 {
                                     observable.trigger("exit")
-                                    alert("Thank")
+                                    alert("Email sent. Thank")
                                 }
                             }).fail(function(){
                                 alert("Service unavailable at the moment")
