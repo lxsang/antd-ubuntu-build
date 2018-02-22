@@ -88,9 +88,12 @@ h1 .cv{
     color:#3170B2;
     border-bottom: 1px solid #3170B2;
 }
+a{
+    text-decoration: none;
+    color:#3170B2;
+}
 .sub-container h2
 {
-    color:#3170B2;
     font-size:18px;
     color:#3170B2;
     border-bottom: 1px dotted #3170B2;
