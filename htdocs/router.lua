@@ -62,6 +62,8 @@ else
 	if hstr == "os/" then
 		--print("require module")
 		require("os.router")(REQUEST.path:gsub(hstr,"",1))
+	elseif hstr == "blog/" then
+		require("blog.router")(REQUEST.path:gsub(hstr,"",1))
 	else
 		fail("Resource not found for request "..REQUEST.path)
 	end

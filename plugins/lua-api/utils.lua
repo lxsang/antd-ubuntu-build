@@ -97,7 +97,7 @@ function JSON.encode(obj)
 	elseif obj == nil then
 		return "null"
 	else
-		return tostring(obj)
+		return '"'..tostring(obj)..'"'
 	end
 end
 

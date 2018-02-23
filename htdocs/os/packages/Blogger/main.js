@@ -390,7 +390,7 @@
         if (!sel) {
           return;
         }
-        me.editor.value(sel.content);
+        me.editor.value(atob(sel.content));
         return me.inputtags.value = sel.tags;
       });
       return this.on("vboxchange", function() {
@@ -653,13 +653,14 @@
       }
       d = new Date();
       data = {
-        content: content,
+        content: content.asBase64(),
         title: title[1].trim(),
         tags: tags,
         ctime: sel ? sel.ctime : d.timestamp(),
         ctimestr: sel ? sel.ctimestr : d.toString(),
         utime: d.timestamp(),
-        utimestr: d.toString()
+        utimestr: d.toString(),
+        rendered: me.editor.options.previewRender(content).asBase64()
       };
       if (sel) {
         data.id = sel.id;
@@ -673,9 +674,14 @@
     };
 
     Blogger.prototype.loadBlogs = function() {
-      var me;
+      var cond, me;
       me = this;
-      return this.blogdb.get(null, function(r) {
+      cond = {
+        order: {
+          ctime: "DESC"
+        }
+      };
+      return this.blogdb.find(cond, function(r) {
         var i, len, ref, v;
         if (r.error) {
           return me.notify("No post found: " + r.error);

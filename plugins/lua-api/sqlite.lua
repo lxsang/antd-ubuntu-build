@@ -66,6 +66,9 @@ function DBModel:find(cond)
 		end
 		cnd = cnd..table.concat(l, ",")
 	end
+	if cond.limit then
+		cnd = cnd.." LIMIT "..cond.limit
+	end
 	--print(cnd)
 	local data = sqlite.select(self.db, self.name, cnd)
 	if data == nil then return nil end
