@@ -4,6 +4,11 @@ package.path = package.path..";"..__ROOT__ .. '/os/?.lua'
 unix = require("ulib")
 require("sqlite")
 
+if HEADER["User-Agent"] and HEADER["User-Agent"]:match("Mobi") then
+    HEADER.mobile = true
+end
+
+
 function fail(msg)
 	std.json()
 	std.t(JSON.encode({error=msg}))

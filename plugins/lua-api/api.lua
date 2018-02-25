@@ -9,7 +9,7 @@ if REQUEST.query ~= nil and REQUEST.query.cookie ~= nil then
 	SESSION = REQUEST.query.cookie
 end
 HEADER = REQUEST.query.__xheader__
-
+HEADER.mobile = false
 require("std")
 require("utils")
 require("extra_mime")
@@ -70,16 +70,17 @@ function loadscript(file)
                     end
                 else -- no match
                     if mtbegin then
-                        -- detect if we have inline lua with formqt <?=..?>
+                        -- detect if we have inline lua with format <?=..?>
                         local b,f = line:find("<%?=")
                         if b then
                             local tmp = line
+                            pro= pro.."echo("
                             while(b) do
                                 -- find the close
                                 local x,y = tmp:find("%?>")
                                 if x then
-                                    pro= pro.."echo(\""..utils.escape(html..tmp:sub(0,b-1):gsub("%%","%%%%")).."\")\n"
-                                    pro = pro.."echo("..tmp:sub(f+1,x-1)..")\n"
+                                    pro = pro.."\""..utils.escape(html..tmp:sub(0,b-1):gsub("%%","%%%%")).."\".."
+                                    pro = pro..tmp:sub(f+1,x-1)..".."
                                     html = ""
                                     tmp = tmp:sub(y+1)
                                     b,f = tmp:find("<%?=")
@@ -87,7 +88,8 @@ function loadscript(file)
                                     error("Syntax error near line "..i)
                                 end
                             end
-                            pro= pro.."echo(\""..utils.escape(tmp:gsub("%%","%%%%")).."\")\n"
+                            pro = pro.."\""..utils.escape(tmp:gsub("%%","%%%%")).."\")\n"
+                            --print(pro)
                         else
                             html = html..std.trim(line," "):gsub("%%","%%%%").."\n"
                         end
