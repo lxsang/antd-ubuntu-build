@@ -21,7 +21,7 @@ function die (msg)
 end
 
 -- test only
-if REQUEST.path:match("/*router%.lua") or REQUEST.path:match("/*router") then
+if REQUEST.path:match("^%/*router%.lua$") or REQUEST.path:match("^%/*router$") then
     die("Recursive call to index.lua is not allown")
 end
 
@@ -53,7 +53,8 @@ local m, s, p  = has_module(REQUEST.path)
 if m then
     -- run the correct module
     if s then
-        doscript(p)
+		local r,e = loadscript(p)
+		if r then r() else fail(e) end
     else
         require(p)
     end

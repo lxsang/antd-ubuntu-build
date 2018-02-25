@@ -1,6 +1,9 @@
 <?lua
-    local model = _G.dbmodel
-    if #model.order == 0 then
+    local arg = {...}
+    local datas = arg[1]
+    local order = arg[2]
+    loadscript(BLOG_ROOT.."/view/top.ls")("Welcome to my blog")
+    if #order == 0 then
 ?>
     <div class = "notfound">
        <p>No entry found</p>
@@ -13,8 +16,8 @@
         return
     end
 
-    for idx,v in pairs(model.order) do
-        local data = model.data[v]
+    for idx,v in pairs(order) do
+        local data = datas[v]
 ?>
 <div class = "card">
     <div class = "side">
@@ -25,9 +28,11 @@
             local i = 1
             for tag in data.tags:gmatch(",*([^,]+)") do
                 tag = std.trim(tag, " ")
-                local b64tag = std.b64encode(tag)
-                atags[i] = '<a href = "./bytag:'..b64tag:gsub("=","")..':'..MAX_ENTRY..'">'..tag.."</a>"
-                i = i+ 1
+                if tag ~= "" then
+                    local b64tag = std.b64encode(tag)
+                    atags[i] = '<a href = "./r:bytag:'..b64tag:gsub("=","")..':'..MAX_ENTRY..'">'..tag.."</a>"
+                    i = i+ 1
+                end
             end
             echo(table.concat(atags, ", "))
         ?>
@@ -48,7 +53,7 @@
         </div>
         <div class = "detail">
                 <span></span>
-                <?='<a href="./id:'..data.id..'" ></a>'?>
+                <?='<a href="./r:id:'..data.id..'" ></a>'?>
                 <span></span>
         </div>
     </div>
