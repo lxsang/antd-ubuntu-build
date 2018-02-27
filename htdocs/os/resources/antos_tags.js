@@ -575,6 +575,7 @@
         this.status = opts.status == undefined?true:opts.status
         this.selectedFile = undefined
         this.showhidden = opts.showhidden
+        this.preventUpdate = false
         this.fetch = opts.fetch
         this.chdir = opts.chdir
         this.rid = $(self.root).attr("data-id") || Math.floor(Math.random() * 100000) + 1
@@ -591,7 +592,8 @@
                 switchView()
             if(k == "data")
                 self.selectedFile = undefined
-            self.update()
+            if(k != "preventUpdate")
+                self.update()
         }
         self.root.get = function(k)
         {
@@ -700,7 +702,12 @@
             calibre_size()
         }
         self.on("updated", function(){
-            refreshData()
+            if(self.preventUpdate)
+            {
+                self.preventUpdate = false
+            }
+            else
+                refreshData()
             //calibre_size()
         })
         self.on("mount", function(){
@@ -1455,6 +1462,7 @@
             <a href="#" onclick = {parent.onselect}>
                 <afx-switch if = {data.switch || data.radio} class = {checked:parent.checkItem(data)} enable = false swon = {data.checked} ></afx-switch>
                 <afx-label color = {data.color} iconclass = {data.iconclass} icon = {data.icon} text = {data.text} ></afx-label>
+                <span if={data.shortcut} class = "shortcut">{data.shortcut}</span>
             </a>
             
             <afx-menu  if={data.child != null && data.child.length > 0} child={data.child} onmenuselect = {data.onmenuselect}  observable = {parent.root.observable} rootid = {parent.rid}></afx-menu>
@@ -1749,10 +1757,16 @@
 <afx-switch>
     <span class = {swon: swon} onclick = {toggle}></span>
     <script>
-        this.swon = opts.swon || false
+        if(opts.swon != undefined)
+            this.swon = opts.swon
+        else
+            this.swon = false
         var self = this
         this.root.observable = opts.observable
-        this.enable = opts.enable || true
+        if(opts.enable != undefined)
+            this.enable = opts.enable
+        else
+            this.enable = true
         this.onchange = opts.onchange
         this.rid = $(self.root).attr("data-id") || Math.floor(Math.random() * 100000) + 1
         self.root.set = function(k,v)
@@ -1859,9 +1873,8 @@
         }
 
         self.root.update = function(){
-            self.update()
+            self.update(true)
         }
-
         self.on("mount", function(){
             self.refs.list.root.observable = self.root.observable
             /*self.root.observable.on("listselect", function(){

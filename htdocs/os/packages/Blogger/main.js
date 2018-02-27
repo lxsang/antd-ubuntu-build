@@ -391,7 +391,27 @@
           return;
         }
         me.editor.value(atob(sel.content));
-        return me.inputtags.value = sel.tags;
+        me.inputtags.value = sel.tags;
+        return (me.find("blog-publish")).set("swon", (sel.publish ? true : false));
+      });
+      this.bloglist.set("onitemclose", function(e) {
+        me.openDialog("YesNoDialog", function(b) {
+          if (!b) {
+            return;
+          }
+          return me.blogdb["delete"](e.item.item.id, function(r) {
+            if (r.error) {
+              return me.error("Cannot delete: " + r.error);
+            }
+            me.bloglist.remove(e.item.item, true);
+            me.bloglist.set("selected", -1);
+            return me.clearEditor();
+          });
+        }, "Delete a post", {
+          iconclass: "fa fa-question-circle",
+          text: "Do you really want to delete this post ?"
+        });
+        return false;
       });
       return this.on("vboxchange", function() {
         return me.resizeContent();
@@ -660,7 +680,8 @@
         ctimestr: sel ? sel.ctimestr : d.toString(),
         utime: d.timestamp(),
         utimestr: d.toString(),
-        rendered: me.editor.options.previewRender(content).asBase64()
+        rendered: me.editor.options.previewRender(content).asBase64(),
+        publish: (this.find("blog-publish")).get("swon") ? 1 : 0
       };
       if (sel) {
         data.id = sel.id;
@@ -673,9 +694,16 @@
       });
     };
 
+    Blogger.prototype.clearEditor = function() {
+      this.editor.value("");
+      this.inputtags.value = "";
+      return (this.find("blog-publish")).set("swon", false);
+    };
+
     Blogger.prototype.loadBlogs = function() {
-      var cond, me;
+      var cond, me, selidx;
       me = this;
+      selidx = this.bloglist.get("selidx");
       cond = {
         order: {
           ctime: "DESC"
@@ -703,27 +731,13 @@
             }
           ];
         }
-        me.bloglist.set("onitemclose", function(e) {
-          me.openDialog("YesNoDialog", function(b) {
-            if (!b) {
-              return;
-            }
-            return me.blogdb["delete"](e.item.item.id, function(r) {
-              if (r.error) {
-                return me.error("Cannot delete: " + r.error);
-              }
-              me.bloglist.remove(e.item.item, true);
-              me.bloglist.set("selected", -1);
-              me.editor.value("");
-              return me.inputtags.value = "";
-            });
-          }, "Delete a post", {
-            iconclass: "fa fa-question-circle",
-            text: "Do you really want to delete this post ?"
-          });
-          return false;
-        });
-        return me.bloglist.set("items", r.result);
+        me.bloglist.set("items", r.result);
+        if (selidx !== -1) {
+          return me.bloglist.set("selected", selidx);
+        } else {
+          me.clearEditor();
+          return me.bloglist.set("selected", -1);
+        }
       });
     };
 

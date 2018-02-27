@@ -1503,6 +1503,31 @@
       return event.preventDefault();
     },
     initDM: function() {
+      ($(window)).bind('keydown', function(event) {
+        var app, c, fnk, r;
+        app = ($("#sysdock"))[0].get("selectedApp");
+        if (!app) {
+          return true;
+        }
+        c = String.fromCharCode(event.which).toUpperCase();
+        fnk = void 0;
+        if (event.ctrlKey) {
+          fnk = "CTRL";
+        } else if (event.metaKey) {
+          fnk = "META";
+        } else if (event.shiftKey) {
+          fnk = "SHIFT";
+        } else if (event.altKey) {
+          fnk = "ALT";
+        }
+        if (!fnk) {
+          return;
+        }
+        r = app.shortcut(fnk, c);
+        if (!r) {
+          return event.preventDefault();
+        }
+      });
       return _API.resource("schemes/dm.html", function(x) {
         var desktop, fp, scheme;
         if (!x) {
@@ -1975,6 +2000,12 @@
         _OS.setting.applications[this.name] = {};
       }
       this.setting = _OS.setting.applications[this.name];
+      this.keycomb = {
+        ALT: {},
+        CTRL: {},
+        SHIFT: {},
+        META: {}
+      };
     }
 
     BaseApplication.prototype.init = function() {
@@ -2013,6 +2044,31 @@
       });
       path = (this.meta().path) + "/scheme.html";
       return this.render(path);
+    };
+
+    BaseApplication.prototype.bindKey = function(k, f) {
+      var arr, c, fnk;
+      arr = k.split("-");
+      if (arr.length !== 2) {
+        return;
+      }
+      fnk = arr[0].toUpperCase();
+      c = arr[1].toUpperCase();
+      if (!this.keycomb[fnk]) {
+        return;
+      }
+      return this.keycomb[fnk][c] = f;
+    };
+
+    BaseApplication.prototype.shortcut = function(fnk, c) {
+      if (!this.keycomb[fnk]) {
+        return true;
+      }
+      if (!this.keycomb[fnk][c]) {
+        return true;
+      }
+      this.keycomb[fnk][c]();
+      return false;
     };
 
     BaseApplication.prototype.applySetting = function(k) {};
