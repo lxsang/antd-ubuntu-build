@@ -348,8 +348,7 @@
             className: "fa fa-file",
             action: function(e) {
               me.bloglist.set("selected", -1);
-              me.editor.value("");
-              return me.inputtags.value = "";
+              return me.clearEditor();
             }
           }, {
             name: "save",
