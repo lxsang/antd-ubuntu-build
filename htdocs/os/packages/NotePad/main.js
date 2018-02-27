@@ -392,15 +392,15 @@
             {
               text: "Open",
               dataid: this.name + "-Open",
-              shortcut: "META-O"
+              shortcut: "M-O"
             }, {
               text: "Save",
               dataid: this.name + "-Save",
-              shortcut: "CTRL-S"
+              shortcut: "C-S"
             }, {
               text: "Save as",
               dataid: this.name + "-Saveas",
-              shortcut: "META-S"
+              shortcut: "M-S"
             }
           ],
           onmenuselect: function(e) {
