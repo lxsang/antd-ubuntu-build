@@ -175,7 +175,7 @@
         });
         return false;
       });
-      this.bindKey("META-O", function() {
+      this.bindKey("ALT-O", function() {
         return me.actionFile(me.name + "-Open");
       });
       this.bindKey("CTRL-S", function() {
@@ -392,7 +392,7 @@
             {
               text: "Open",
               dataid: this.name + "-Open",
-              shortcut: "M-O"
+              shortcut: "A-O"
             }, {
               text: "Save",
               dataid: this.name + "-Save",
