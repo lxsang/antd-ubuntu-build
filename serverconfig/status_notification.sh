@@ -3,7 +3,9 @@
 # running. If its not it is restarted and an email is sent to
 # the configured mailbox.
 ######################
-
+# add a crontab entry to call this script each 15min
+# crontab -e
+# 15 * * * * /opt/www/serverconfig/status_notification.sh > /dev/null
 # The service we want to check (according to systemctl)
 SERVICE=antd
 # Where to send the restart mail to
