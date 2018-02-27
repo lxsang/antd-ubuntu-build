@@ -14,7 +14,7 @@ then
 	echo "$SERVICE wasnt running so attempting restart"
 	systemctl restart $SERVICE
 	echo "Mailing $MAILBOX with current status"
-	systemctl status $SERVICE | mail -s "$SERVICE was restarted" $MAILBOX
+	systemctl status $SERVICE | sendmail  $MAILBOX
 	exit 0
 fi 
 echo "$SERVICE is currently running"
