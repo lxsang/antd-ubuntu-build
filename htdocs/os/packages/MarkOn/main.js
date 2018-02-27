@@ -47,6 +47,15 @@
       this.on("hboxchange", function(e) {
         return me.resizeContent();
       });
+      this.bindKey("ALT-O", function() {
+        return me.actionFile(me.name + "-Open");
+      });
+      this.bindKey("CTRL-S", function() {
+        return me.actionFile(me.name + "-Save");
+      });
+      this.bindKey("ALT-W", function() {
+        return me.actionFile(me.name + "-Saveas");
+      });
       this.resizeContent();
       return this.open(this.currfile);
     };
@@ -98,17 +107,20 @@
           child: [
             {
               text: "Open",
-              dataid: this.name + "-Open"
+              dataid: this.name + "-Open",
+              shortcut: "A-O"
             }, {
               text: "Save",
-              dataid: this.name + "-Save"
+              dataid: this.name + "-Save",
+              shortcut: "C-S"
             }, {
               text: "Save as",
-              dataid: this.name + "-Saveas"
+              dataid: this.name + "-Saveas",
+              shortcut: "A-W"
             }
           ],
           onmenuselect: function(e) {
-            return me.actionFile(e);
+            return me.actionFile(e.item.data.dataid);
           }
         }
       ];
@@ -126,7 +138,7 @@
           file: me.currfile
         });
       };
-      switch (e.item.data.dataid) {
+      switch (e) {
         case this.name + "-Open":
           return this.openDialog("FileDiaLog", function(d, f) {
             return me.open((d + "/" + f).asFileHandler());

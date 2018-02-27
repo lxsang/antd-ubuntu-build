@@ -4,21 +4,19 @@ uman.userinfo = function(user)
 	local info = {}
 	local uid = unix.uid(user)
 	if uid then
-		info.userData = {
-			username = user,
-			id = uid.id,
-			name = user,
-			groups = uid.groups
-		}
-		info.blacklistedPackages = {}
-		info.userSettings = {}
 		-- read the setting
 		-- use the decodeFile function of JSON instead
 		local file =  require('fs.vfs').ospath("home:///").."/.settings.json"
 		local st = JSON.decodeFile(file)
 		if(st) then
-			info.userSettings = st.settings
+			info = st.settings
 		end
+		info.user = {
+			username = user,
+			id = uid.id,
+			name = user,
+			groups = uid.groups
+		}
 		--print(JSON.encode(info))
 		return info
 	else 

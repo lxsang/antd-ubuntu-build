@@ -114,6 +114,36 @@
           return me.chdir(null);
         }
       });
+      this.bindKey("CTRL-F", function() {
+        return me.actionFile(me.name + "-mkf");
+      });
+      this.bindKey("CTRL-D", function() {
+        return me.actionFile(me.name + "-mkdir");
+      });
+      this.bindKey("CTRL-U", function() {
+        return me.actionFile(me.name + "-upload");
+      });
+      this.bindKey("CTRL-S", function() {
+        return me.actionFile(me.name + "-share");
+      });
+      this.bindKey("CTRL-I", function() {
+        return me.actionFile(me.name + "-info");
+      });
+      this.bindKey("CTRL-R", function() {
+        return me.actionEdit(me.name + "-mv");
+      });
+      this.bindKey("CTRL-M", function() {
+        return me.actionEdit(me.name + "-rm");
+      });
+      this.bindKey("CTRL-X", function() {
+        return me.actionEdit(me.name + "-cut");
+      });
+      this.bindKey("CTRL-C", function() {
+        return me.actionEdit(me.name + "-copy");
+      });
+      this.bindKey("CTRL-P", function() {
+        return me.actionEdit(me.name + "-paste");
+      });
       return this.chdir(null);
     };
 
@@ -155,30 +185,35 @@
         child: [
           {
             text: "New file",
-            dataid: this.name + "-mkf"
+            dataid: this.name + "-mkf",
+            shortcut: 'C-F'
           }, {
             text: "New folder",
-            dataid: this.name + "-mkdir"
+            dataid: this.name + "-mkdir",
+            shortcut: 'C-D'
           }, {
             text: "Open with",
             dataid: this.name + "-open",
             child: this.apps
           }, {
             text: "Upload",
-            dataid: this.name + "-upload"
+            dataid: this.name + "-upload",
+            shortcut: 'C-U'
           }, {
             text: "Download",
             dataid: this.name + "-download"
           }, {
             text: "Share file",
-            dataid: this.name + "-share"
+            dataid: this.name + "-share",
+            shortcut: 'C-S'
           }, {
             text: "Properties",
-            dataid: this.name + "-info"
+            dataid: this.name + "-info",
+            shortcut: 'C-I'
           }
         ],
         onmenuselect: function(e) {
-          return me.actionFile(e);
+          return me.actionFile(e.item.data.dataid);
         }
       };
       return arr;
@@ -192,23 +227,28 @@
         child: [
           {
             text: "Rename",
-            dataid: this.name + "-mv"
+            dataid: this.name + "-mv",
+            shortcut: 'C-R'
           }, {
             text: "Delete",
-            dataid: this.name + "-rm"
+            dataid: this.name + "-rm",
+            shortcut: 'C-M'
           }, {
             text: "Cut",
-            dataid: this.name + "-cut"
+            dataid: this.name + "-cut",
+            shortcut: 'C-X'
           }, {
             text: "Copy",
-            dataid: this.name + "-copy"
+            dataid: this.name + "-copy",
+            shortcut: 'C-C'
           }, {
             text: "Paste",
-            dataid: this.name + "-paste"
+            dataid: this.name + "-paste",
+            shortcut: 'C-P'
           }
         ],
         onmenuselect: function(e) {
-          return me.actionEdit(e);
+          return me.actionEdit(e.item.data.dataid);
         }
       };
     };
@@ -310,7 +350,7 @@
       var file, me;
       me = this;
       file = this.view.get("selectedFile");
-      switch (e.item.data.dataid) {
+      switch (e) {
         case this.name + "-mv":
           if (!file) {
             return;
@@ -389,7 +429,7 @@
       var file, me;
       me = this;
       file = this.view.get("selectedFile");
-      switch (e.item.data.dataid) {
+      switch (e) {
         case this.name + "-mkdir":
           return this.openDialog("PromptDialog", function(d) {
             return me.currdir.mk(d, function(r) {

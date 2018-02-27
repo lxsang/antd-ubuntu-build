@@ -181,7 +181,7 @@
       this.bindKey("CTRL-S", function() {
         return me.actionFile(me.name + "-Save");
       });
-      this.bindKey("META-S", function() {
+      this.bindKey("ALT-W", function() {
         return me.actionFile(me.name + "-Saveas");
       });
       return this.open(this.currfile);
@@ -400,7 +400,7 @@
             }, {
               text: "Save as",
               dataid: this.name + "-Saveas",
-              shortcut: "M-S"
+              shortcut: "A-W"
             }
           ],
           onmenuselect: function(e) {

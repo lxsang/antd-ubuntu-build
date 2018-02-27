@@ -415,31 +415,46 @@
       path = "resources/" + r;
       return _API.get(path, c, f);
     },
+    libready: function(l) {
+      return _API.shared[l] || false;
+    },
     require: function(l, f) {
       var js, path;
-      path = "os:///scripts/";
       if (!_API.shared[l]) {
-        js = "" + path + l + ".js";
-        return js.asFileHandler().onready(function(d) {
-          var css, el;
-          _API.shared[l] = true;
-          el = $('<script>', {
-            src: _API.handler.get + "/" + js
-          }).appendTo('head');
-          css = "" + path + l + ".css";
-          css.asFileHandler().onready(function(d) {
-            return el = $('<link>', {
-              rel: 'stylesheet',
-              type: 'text/css',
-              'href': _API.handler.get + "/" + css
+        if (l.match(/^(https?:\/\/[^\s]+)/g)) {
+          return _API.script(l, function() {
+            _API.shared[l] = true;
+            _courrier.trigger("sharedlibraryloaded", l);
+            if (f) {
+              return f();
+            }
+          }, function(e, s) {
+            return _courrier.oserror("Cannot load 3rd library at: " + l, e, r);
+          });
+        } else {
+          path = "os:///scripts/";
+          js = "" + path + l + ".js";
+          return js.asFileHandler().onready(function(d) {
+            var css, el;
+            _API.shared[l] = true;
+            el = $('<script>', {
+              src: _API.handler.get + "/" + js
             }).appendTo('head');
-          }, function() {});
-          console.log("loaded", l);
-          _courrier.trigger("sharedlibraryloaded", l);
-          if (f) {
-            return f();
-          }
-        });
+            css = "" + path + l + ".css";
+            css.asFileHandler().onready(function(d) {
+              return el = $('<link>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                'href': _API.handler.get + "/" + css
+              }).appendTo('head');
+            }, function() {});
+            console.log("loaded", l);
+            _courrier.trigger("sharedlibraryloaded", l);
+            if (f) {
+              return f();
+            }
+          });
+        }
       } else {
         console.log(l, "Library exist, no need to load");
         return _courrier.trigger("sharedlibraryloaded", l);
@@ -486,6 +501,82 @@
         return "";
       }
       return err;
+    }
+  };
+
+  self.OS.systemSetting = function(conf) {
+    if (conf.desktop) {
+      _OS.setting.desktop = conf.desktop;
+    }
+    if (conf.applications) {
+      _OS.setting.applications = conf.applications;
+    }
+    if (conf.appearance) {
+      _OS.setting.appearance = conf.appearance;
+    }
+    _OS.setting.user = conf.user;
+    if (conf.VFS) {
+      _OS.setting.VFS = conf.VFS;
+    }
+    if (!_OS.setting.desktop.path) {
+      _OS.setting.desktop.path = "home:///.desktop";
+    }
+    if (!_OS.setting.desktop.menu) {
+      _OS.setting.desktop.menu = {};
+    }
+    if (!_OS.setting.VFS.mountpoints) {
+      _OS.setting.VFS.mountpoints = [
+        {
+          text: "Applications",
+          path: 'app:///',
+          iconclass: "fa  fa-adn",
+          type: "app"
+        }, {
+          text: "Home",
+          path: 'home:///',
+          iconclass: "fa fa-home",
+          type: "fs"
+        }, {
+          text: "OS",
+          path: 'os:///',
+          iconclass: "fa fa-inbox",
+          type: "fs"
+        }, {
+          text: "Desktop",
+          path: _OS.setting.desktop.path,
+          iconclass: "fa fa-desktop",
+          type: "fs"
+        }, {
+          text: "Shared",
+          path: 'shared:///',
+          iconclass: "fa fa-share-square",
+          type: "fs"
+        }
+      ];
+    }
+    if (conf.system) {
+      _OS.setting.system = conf.system;
+    }
+    if (!_OS.setting.system.pkgpaths) {
+      _OS.setting.system.pkgpaths = ["home:///.packages", "os:///packages"];
+    }
+    if (!_OS.setting.system.menu) {
+      _OS.setting.system.menu = {};
+    }
+    if (!_OS.setting.system.repositories) {
+      _OS.setting.system.repositories = [];
+    }
+    if (!_OS.setting.appearance.theme) {
+      _OS.setting.appearance.theme = "antos";
+    }
+    if (!_OS.setting.VFS.gdrive) {
+      return _OS.setting.VFS.gdrive = {
+        CLIENT_ID: "1006507170703-l322pfkrhf9cgta4l4jh2p8ughtc14id.apps.googleusercontent.com",
+        API_KEY: "AIzaSyBZhM5KbARvT10acWC8JQKlRn2WbSsmfLc",
+        apilink: "https://apis.google.com/js/api.js",
+        DISCOVERY_DOCS: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+        SCOPES: 'https://www.googleapis.com/auth/drive.metadata.readonly'
+      };
     }
   };
 
@@ -1146,8 +1237,88 @@
     extend(GoogleDriveHandler, superClass);
 
     function GoogleDriveHandler(path) {
+      var me;
       GoogleDriveHandler.__super__.constructor.call(this, path);
+      me = this;
+      this.setting = _OS.setting.VFS.gdrive;
+      if (!this.setting) {
+        return _courrier.oserror("Unknown API setting for google drive VFS", _API.throwe("OS.VFS"), null);
+      }
+      if (this.isRoot()) {
+        this.gid = 'root';
+      }
     }
+
+    GoogleDriveHandler.prototype.oninit = function(f) {
+      var me;
+      me = this;
+      if (!this.setting) {
+        return;
+      }
+      if (_API.libready(this.setting.apilink)) {
+        return f();
+      } else {
+        return _API.require(this.setting.apilink, function() {
+          return gapi.load("client:auth2", function() {
+            return gapi.client.init({
+              apiKey: me.setting.API_KEY,
+              clientId: me.setting.CLIENT_ID,
+              discoveryDocs: me.setting.DISCOVERY_DOCS,
+              scope: me.setting.SCOPES
+            }).then(function() {
+              var fn;
+              fn = function(r) {
+                if (r) {
+                  return f();
+                }
+                return gapi.auth2.getAuthInstance().signIn();
+              };
+              gapi.auth2.getAuthInstance().isSignedIn.listen(function(r) {
+                return fn(r);
+              });
+              return fn(gapi.auth2.getAuthInstance().isSignedIn.get());
+            });
+          });
+        });
+      }
+    };
+
+    GoogleDriveHandler.prototype.meta = function(f) {
+      return this.oninit(function() {
+        return gapi.client.drive.files.list({
+          q: 'parents = "root" and trashed = false ',
+          fields: "nextPageToken, files(id, name)"
+        }).then(function(r) {
+          console.log(r);
+          return f();
+        });
+      });
+    };
+
+    GoogleDriveHandler.prototype.action = function(n, p, f) {
+      var me;
+      me = this;
+      switch (n) {
+        case "read":
+          break;
+        case "mk":
+          break;
+        case "write":
+          break;
+        case "upload":
+          break;
+        case "remove":
+          break;
+        case "publish":
+          break;
+        case "download":
+          break;
+        case "move":
+          break;
+        default:
+          return _courrier.osfail("VFS unknown action: " + n, _API.throwe("OS.VFS"), n);
+      }
+    };
 
     return GoogleDriveHandler;
 
@@ -1763,70 +1934,8 @@
     },
     startAntOS: function(conf) {
       _OS.cleanup();
-      if (conf.desktop) {
-        _OS.setting.desktop = conf.desktop;
-      }
-      if (conf.applications) {
-        _OS.setting.applications = conf.applications;
-      }
-      if (conf.appearance) {
-        _OS.setting.appearance = conf.appearance;
-      }
-      _OS.setting.user = conf.user;
-      if (conf.VFS) {
-        _OS.setting.VFS = conf.VFS;
-      }
-      if (!_OS.setting.desktop.path) {
-        _OS.setting.desktop.path = "home:///.desktop";
-      }
-      if (!_OS.setting.desktop.menu) {
-        _OS.setting.desktop.menu = {};
-      }
-      if (!_OS.setting.VFS.mountpoints) {
-        _OS.setting.VFS.mountpoints = [
-          {
-            text: "Applications",
-            path: 'app:///',
-            iconclass: "fa  fa-adn",
-            type: "app"
-          }, {
-            text: "Home",
-            path: 'home:///',
-            iconclass: "fa fa-home",
-            type: "fs"
-          }, {
-            text: "OS",
-            path: 'os:///',
-            iconclass: "fa fa-inbox",
-            type: "fs"
-          }, {
-            text: "Desktop",
-            path: _OS.setting.desktop.path,
-            iconclass: "fa fa-desktop",
-            type: "fs"
-          }, {
-            text: "Shared",
-            path: 'shared:///',
-            iconclass: "fa fa-share-square",
-            type: "fs"
-          }
-        ];
-      }
-      if (conf.system) {
-        _OS.setting.system = conf.system;
-      }
-      if (!_OS.setting.system.pkgpaths) {
-        _OS.setting.system.pkgpaths = ["home:///.packages", "os:///packages"];
-      }
-      if (!_OS.setting.system.menu) {
-        _OS.setting.system.menu = {};
-      }
-      if (!_OS.setting.system.repositories) {
-        _OS.setting.system.repositories = [];
-      }
-      if (!_OS.setting.appearance.theme) {
-        _OS.setting.appearance.theme = "antos";
-      }
+      _OS.systemSetting(conf);
+      console.log(_OS.setting);
       _GUI.loadTheme(_OS.setting.appearance.theme);
       _GUI.initDM();
       _courrier.observable.one("syspanelloaded", function() {
