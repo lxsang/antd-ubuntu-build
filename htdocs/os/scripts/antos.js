@@ -564,6 +564,12 @@
     if (conf.system) {
       _OS.setting.system = conf.system;
     }
+    if (!_OS.setting.system.startup) {
+      _OS.setting.system.startup = {
+        services: ["CoreServices/PushNotification", "CoreServices/UserService", "CoreServices/Calendar", "CoreServices/Spotlight"],
+        apps: []
+      };
+    }
     if (!_OS.setting.system.pkgpaths) {
       _OS.setting.system.pkgpaths = ["home:///.packages", "os:///packages"];
     }
@@ -1849,6 +1855,7 @@
       }, "script");
     },
     launch: function(app, args) {
+      console.log("launching " + app);
       if (!_OS.APP[app]) {
         return _GUI.loadApp(app, function(a) {
           return _PM.createProcess(a, _OS.APP[a], args);
@@ -2193,7 +2200,7 @@
         return _API.packages.cache(function(ret) {
           if (ret.result) {
             return _API.packages.fetch(function(r) {
-              var k, ref, v;
+              var a, j, k, len, ref, ref1, results, v;
               if (r.result) {
                 ref = r.result;
                 for (k in ref) {
@@ -2209,7 +2216,14 @@
               }
               _OS.setting.system.packages = r.result ? r.result : void 0;
               _GUI.buildSystemMenu();
-              return _GUI.pushServices(["CoreServices/PushNotification", "CoreServices/UserService", "CoreServices/Spotlight", "CoreServices/Calendar"]);
+              _GUI.pushServices(_OS.setting.system.startup.services);
+              ref1 = _OS.setting.system.startup.apps;
+              results = [];
+              for (j = 0, len = ref1.length; j < len; j++) {
+                a = ref1[j];
+                results.push(_GUI.launch(a));
+              }
+              return results;
             });
           }
         });
