@@ -1855,7 +1855,6 @@
       }, "script");
     },
     launch: function(app, args) {
-      console.log("launching " + app);
       if (!_OS.APP[app]) {
         return _GUI.loadApp(app, function(a) {
           return _PM.createProcess(a, _OS.APP[a], args);
@@ -2033,8 +2032,7 @@
               return;
             }
             desktop[0].set("selected", -1);
-            ($("#sysdock")).get(0).set("selectedApp", null);
-            return console.log("desktop clicked");
+            return ($("#sysdock")).get(0).set("selectedApp", null);
           });
           desktop[0].contextmenuHandler = function(e, m) {
             var k, menu, v;
