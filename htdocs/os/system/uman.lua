@@ -9,7 +9,7 @@ uman.userinfo = function(user)
 		local file =  require('fs.vfs').ospath("home:///").."/.settings.json"
 		local st = JSON.decodeFile(file)
 		if(st) then
-			info = st.settings
+			info = st
 		end
 		info.user = {
 			username = user,

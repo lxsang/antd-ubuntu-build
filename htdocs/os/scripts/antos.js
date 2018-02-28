@@ -709,23 +709,31 @@
       });
     },
     logout: function() {
-      var p;
-      p = _REST + "/system/logout";
-      return _API.post(p, {}, function(d) {
-        return _OS.boot();
-      }, function() {
-        return alert("Resource not found " + p);
+      return _API.handler.setting(function() {
+        var p;
+        p = _REST + "/system/logout";
+        return _API.post(p, {}, function(d) {
+          return _OS.boot();
+        }, function() {
+          return alert("Resource not found " + p);
+        });
       });
     },
-    setting: function() {
+    setting: function(f) {
       var p;
       p = _REST + "/system/settings";
       return _API.post(p, _OS.setting, function(d) {
         if (d.error) {
-          return _courrier.oserror("Cannot save system setting", d.error);
+          _courrier.oserror("Cannot save system setting", d.error);
+        }
+        if (f) {
+          return f();
         }
       }, function(e, s) {
-        return _courrier.osfail("Fail to make request: " + p, e, s);
+        _courrier.osfail("Fail to make request: " + p, e, s);
+        if (f) {
+          return f();
+        }
       });
     },
     dbquery: function(cmd, d, c) {
