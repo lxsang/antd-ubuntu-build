@@ -159,6 +159,7 @@
     Files.prototype.chdir = function(p) {
       var dir, me;
       me = this;
+      console.log("ch");
       dir = p ? p.asFileHandler() : me.currdir;
       return dir.read(function(d) {
         if (d.error) {
@@ -444,7 +445,7 @@
           return this.openDialog("PromptDialog", function(d) {
             var fp;
             fp = (me.currdir.path + "/" + d).asFileHandler();
-            return fp.write("", function(r) {
+            return fp.write("text/plain", function(r) {
               if (r.error) {
                 return me.error("Fail to create " + d + ": " + r.error);
               }

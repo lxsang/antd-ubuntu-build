@@ -190,6 +190,7 @@
     NotePad.prototype.open = function(file) {
       var i, me;
       i = this.findTabByFile(file);
+      this.fileview.set("preventUpdate", true);
       if (i !== -1) {
         return this.tabarea.set("selected", i);
       }
@@ -273,7 +274,7 @@
     NotePad.prototype.save = function(file) {
       var me;
       me = this;
-      return file.write(file.getb64("text/plain"), function(d) {
+      return file.write("text/plain", function(d) {
         if (d.error) {
           return me.error("Error saving file " + file.basename);
         }
@@ -323,7 +324,6 @@
       file.um = new ace.UndoManager();
       this.currfile.selected = false;
       file.selected = true;
-      this.fileview.set("preventUpdate", true);
       return this.tabarea.push(file, true);
     };
 
@@ -416,7 +416,16 @@
       me = this;
       saveas = function() {
         return me.openDialog("FileDiaLog", function(d, n) {
-          me.currfile.setPath(d + "/" + n);
+          var file;
+          file = (d + "/" + n).asFileHandler();
+          file.cache = me.currfile.cache;
+          file.dirty = me.currfile.dirty;
+          file.um = me.currfile.um;
+          file.cursor = me.currfile.cursor;
+          file.selected = me.currfile.selected;
+          file.text = me.currfile.text;
+          me.tabarea.replaceItem(me.currfile, file, false);
+          me.currfile = file;
           return me.save(me.currfile);
         }, "Save as", {
           file: me.currfile

@@ -338,10 +338,12 @@
           processData: false
         }).done(function(data) {
           _API.loaded(q, p, "OK");
-          return c(data);
+          c(data);
+          return o.remove();
         }).fail(function(e, s) {
           _API.loaded(q, p, "FAIL");
-          return f(e, s);
+          f(e, s);
+          return o.remove();
         });
       });
       return o.click();
@@ -547,6 +549,11 @@
           iconclass: "fa fa-desktop",
           type: "fs"
         }, {
+          text: "Google Drive",
+          path: 'gdv:///',
+          iconclass: "fa fa-google-drive",
+          type: "fs"
+        }, {
           text: "Shared",
           path: 'shared:///',
           iconclass: "fa fa-share-square",
@@ -575,7 +582,7 @@
         API_KEY: "AIzaSyBZhM5KbARvT10acWC8JQKlRn2WbSsmfLc",
         apilink: "https://apis.google.com/js/api.js",
         DISCOVERY_DOCS: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
-        SCOPES: 'https://www.googleapis.com/auth/drive.metadata.readonly'
+        SCOPES: 'https://www.googleapis.com/auth/drive'
       };
     }
   };
@@ -800,6 +807,14 @@
       return (!this.genealogy) || (this.genealogy.size === 0);
     };
 
+    BaseFileHandler.prototype.child = function(name) {
+      if (this.isRoot()) {
+        return this.path + name;
+      } else {
+        return this.path + "/" + name;
+      }
+    };
+
     BaseFileHandler.prototype.isHidden = function() {
       if (!this.basename) {
         return false;
@@ -814,13 +829,26 @@
       return this.path.hash();
     };
 
-    BaseFileHandler.prototype.getb64 = function(m) {
-      var b64;
+    BaseFileHandler.prototype.sendB64 = function(m, f) {
+      var b64, me, reader;
+      me = this;
       if (!this.cache) {
-        return "";
+        return;
       }
-      b64 = this.cache.asBase64();
-      return "data:" + m + ";base64," + b64;
+      if (typeof this.cache === "string") {
+        b64 = this.cache.asBase64();
+        b64 = "data:" + m + ";base64," + b64;
+        return f(b64);
+      } else {
+        reader = new FileReader();
+        reader.readAsDataURL(this.cache);
+        reader.onload = function() {
+          return f(reader.result);
+        };
+        return reader.onerror = function(e) {
+          return _courrier.osfail("Cannot ecode file: " + me.path, _API.throwe("OS.VFS"), e);
+        };
+      }
     };
 
     BaseFileHandler.prototype.parent = function() {
@@ -1008,7 +1036,9 @@
           }
           return _API.handler.mkdir(this.path + "/" + p, f);
         case "write":
-          return _API.handler.write(this.path, p, f);
+          return this.sendB64(p, function(data) {
+            return _API.handler.write(me.path, data, f);
+          });
         case "upload":
           if (this.info.type === "file") {
             return;
@@ -1251,6 +1281,7 @@
       if (this.isRoot()) {
         this.gid = 'root';
       }
+      this.cache = "";
     }
 
     GoogleDriveHandler.prototype.oninit = function(f) {
@@ -1275,6 +1306,9 @@
                 if (r) {
                   return f();
                 }
+                G_CACHE = {
+                  "gdv:///": "root"
+                };
                 return gapi.auth2.getAuthInstance().signIn();
               };
               gapi.auth2.getAuthInstance().isSignedIn.listen(function(r) {
@@ -1332,42 +1366,199 @@
       return "webContentLink, id, name,mimeType,description, kind, parents, properties, iconLink, createdTime, modifiedTime, owners, permissions, fullFileExtension, fileExtension, size";
     };
 
+    GoogleDriveHandler.prototype.isFolder = function() {
+      return this.info.mimeType === "application/vnd.google-apps.folder";
+    };
+
+    GoogleDriveHandler.prototype.save = function(id, m, f) {
+      var error, me, oauthToken, url, user, xhr;
+      me = this;
+      user = gapi.auth2.getAuthInstance().currentUser.get();
+      oauthToken = user.getAuthResponse().access_token;
+      xhr = new XMLHttpRequest();
+      url = 'https://www.googleapis.com/upload/drive/v3/files/' + id + '?uploadType=media';
+      xhr.open('PATCH', url);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + oauthToken);
+      xhr.setRequestHeader('Content-Type', m);
+      xhr.setRequestHeader('Content-Encoding', 'base64');
+      xhr.setRequestHeader('Content-Transfer-Encoding', 'base64');
+      error = function(e, s) {
+        return _courrier.oserror("VFS cannot save : " + me.path, e, s);
+      };
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            return f({
+              result: JSON.parse(xhr.responseText)
+            });
+          } else {
+            return error(xhr, xhr.status);
+          }
+        }
+      };
+      xhr.onerror = function() {
+        return error(xhr, xhr.status);
+      };
+      return this.sendB64(m, function(data) {
+        return xhr.send(data.replace(/^data:[^;]+;base64,/g, ""));
+      });
+    };
+
     GoogleDriveHandler.prototype.action = function(n, p, f) {
-      var accessToken, me, xhr;
+      var dest, dir, gid, me, meta, o, q;
       me = this;
       switch (n) {
         case "read":
           if (!this.info.id) {
             return;
           }
-          console.log(this.info.webContentLink);
-          accessToken = gapi.auth.getToken().access_token;
-          xhr = new XMLHttpRequest();
-          xhr.open('GET', this.info.webContentLink);
-          xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-          xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-          xhr.onload = function() {
-            return f(xhr.responseText);
-          };
-          xhr.onerror = function() {
-            return console.log("eror download");
-          };
-          xhr.send();
+          if (this.isFolder()) {
+            return gapi.client.drive.files.list({
+              q: "'" + me.info.id + "' in parents and trashed = false",
+              fields: "files(" + (me.fields()) + ")"
+            }).then(function(r) {
+              var file, j, len, ref;
+              if (!r.result.files) {
+                return;
+              }
+              ref = r.result.files;
+              for (j = 0, len = ref.length; j < len; j++) {
+                file = ref[j];
+                file.path = me.child(file.name);
+                file.mime = file.mimeType;
+                file.filename = file.name;
+                file.type = "file";
+                file.gid = file.id;
+                if (file.mimeType === "application/vnd.google-apps.folder") {
+                  file.mime = "dir";
+                  file.type = "dir";
+                  file.size = 0;
+                }
+              }
+              return f({
+                result: r.result.files
+              });
+            });
+          } else {
+            return gapi.client.drive.files.get({
+              fileId: me.info.id,
+              alt: 'media'
+            }).then(function(r) {
+              return f(r.body);
+            });
+          }
           break;
         case "mk":
+          if (!this.isFolder()) {
+            return f({
+              error: this.path + " is not a directory"
+            });
+          }
+          meta = {
+            name: p,
+            parents: [this.info.id],
+            mimeType: 'application/vnd.google-apps.folder'
+          };
+          gapi.client.drive.files.create({
+            resource: meta,
+            fields: 'id'
+          }).execute(function(r) {
+            if (!(r && r.result)) {
+              return _courrier.oserror("VFS cannot create : " + p, _API.throwe("OS.VFS"), r);
+            }
+            G_CACHE[me.child(p)] = r.result.id;
+            return f(r);
+          });
           break;
         case "write":
+          gid = G_CACHE[me.path];
+          if (gid) {
+            return this.save(gid, p, f);
+          } else {
+            console.log("New file");
+            dir = this.parent().asFileHandler();
+            return dir.onready(function() {
+              meta = {
+                name: me.basename,
+                mimeType: p,
+                parents: [dir.info.id]
+              };
+              return gapi.client.drive.files.create({
+                resource: meta,
+                fields: 'id'
+              }).execute(function(r) {
+                if (!(r && r.result)) {
+                  return _courrier.oserror("VFS cannot write : " + me.path, _API.throwe("OS.VFS"), r);
+                }
+                G_CACHE[me.path] = r.result.id;
+                return me.save(r.result.id, p, f);
+              });
+            });
+          }
           break;
         case "upload":
-          break;
+          if (!this.isFolder()) {
+            return;
+          }
+          q = _courrier.getMID();
+          o = ($('<input>')).attr('type', 'file').css("display", "none");
+          o.change(function() {
+            var file, fo;
+            fo = o[0].files[0];
+            file = (me.child(fo.name)).asFileHandler();
+            file.cache = fo;
+            file.write(fo.type, f);
+            return o.remove();
+          });
+          return o.click();
         case "remove":
-          break;
+          if (!this.info.id) {
+            return;
+          }
+          return gapi.client.drive.files["delete"]({
+            fileId: me.info.id
+          }).execute(function(r) {
+            if (!r) {
+              return _courrier.oserror("VFS cannot delete : " + me.path, _API.throwe("OS.VFS"), r);
+            }
+            G_CACHE[me.path] = null;
+            return f({
+              result: true
+            });
+          });
         case "publish":
           break;
         case "download":
-          break;
+          return gapi.client.drive.files.get({
+            fileId: me.info.id,
+            alt: 'media'
+          }).then(function(r) {
+            var blob;
+            if (!r.body) {
+              return _courrier.oserror("VFS cannot get file : " + me.path, _API.throwe("OS.VFS"), r);
+            }
+            blob = new Blob([r.body], {
+              type: "octet/stream"
+            });
+            return _API.saveblob(me.basename, blob);
+          });
         case "move":
-          break;
+          dest = p.asFileHandler().parent().asFileHandler();
+          return dest.onready(function() {
+            var previousParents;
+            previousParents = me.info.parents.join(',');
+            return gapi.client.drive.files.update({
+              fileId: me.info.id,
+              addParents: dest.info.id,
+              removeParents: previousParents,
+              fields: "id"
+            }).execute(function(r) {
+              if (!r) {
+                return _courrier.oserror("VFS cannot move : " + me.path, _API.throwe("OS.VFS"), r);
+              }
+              return f(r);
+            });
+          });
         default:
           return _courrier.osfail("VFS unknown action: " + n, _API.throwe("OS.VFS"), n);
       }
@@ -1988,7 +2179,6 @@
     startAntOS: function(conf) {
       _OS.cleanup();
       _OS.systemSetting(conf);
-      console.log(_OS.setting);
       _GUI.loadTheme(_OS.setting.appearance.theme);
       _GUI.initDM();
       _courrier.observable.one("syspanelloaded", function() {
@@ -2999,7 +3189,8 @@
         return me.quit();
       });
       if (this.data && this.data.file) {
-        return ($(filename)).css("display", "block").val(this.data.file.basename || "Untitled");
+        ($(filename)).css("display", "block").val(this.data.file.basename || "Untitled");
+        return this.trigger("resize");
       }
     };
 
