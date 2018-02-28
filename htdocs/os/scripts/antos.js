@@ -2209,7 +2209,7 @@
               }
               _OS.setting.system.packages = r.result ? r.result : void 0;
               _GUI.buildSystemMenu();
-              return _GUI.pushServices(["CoreServices/PushNotification", "CoreServices/Spotlight", "CoreServices/Calendar"]);
+              return _GUI.pushServices(["CoreServices/PushNotification", "CoreServices/UserService", "CoreServices/Spotlight", "CoreServices/Calendar"]);
             });
           }
         });
