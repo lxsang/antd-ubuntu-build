@@ -175,6 +175,9 @@
         });
         return false;
       });
+      this.bindKey("ALT-N", function() {
+        return me.actionFile(me.name + "-New");
+      });
       this.bindKey("ALT-O", function() {
         return me.actionFile(me.name + "-Open");
       });
@@ -390,6 +393,10 @@
           text: "File",
           child: [
             {
+              text: "New",
+              dataid: this.name + "-New",
+              shortcut: "A-N"
+            }, {
               text: "Open",
               dataid: this.name + "-Open",
               shortcut: "A-O"
@@ -445,6 +452,8 @@
         case this.name + "-Saveas":
           this.currfile.cache = this.editor.getValue();
           return saveas();
+        case this.name + "-New":
+          return this.open("Untitled".asFileHandler());
       }
     };
 

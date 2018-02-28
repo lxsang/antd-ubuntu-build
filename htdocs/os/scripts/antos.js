@@ -539,19 +539,19 @@
           iconclass: "fa fa-home",
           type: "fs"
         }, {
-          text: "OS",
-          path: 'os:///',
-          iconclass: "fa fa-inbox",
-          type: "fs"
-        }, {
           text: "Desktop",
           path: _OS.setting.desktop.path,
           iconclass: "fa fa-desktop",
           type: "fs"
         }, {
+          text: "OS",
+          path: 'os:///',
+          iconclass: "fa fa-inbox",
+          type: "fs"
+        }, {
           text: "Google Drive",
           path: 'gdv:///',
-          iconclass: "fa fa-google-drive",
+          iconclass: "fa fa-inbox",
           type: "fs"
         }, {
           text: "Shared",

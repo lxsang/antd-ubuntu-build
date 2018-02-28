@@ -47,6 +47,9 @@
       this.on("hboxchange", function(e) {
         return me.resizeContent();
       });
+      this.bindKey("ALT-N", function() {
+        return me.actionFile(me.name + "-New");
+      });
       this.bindKey("ALT-O", function() {
         return me.actionFile(me.name + "-Open");
       });
@@ -107,6 +110,10 @@
           child: [
             {
               text: "Open",
+              dataid: this.name + "-New",
+              shortcut: "A-N"
+            }, {
+              text: "Open",
               dataid: this.name + "-Open",
               shortcut: "A-O"
             }, {
@@ -152,6 +159,10 @@
         case this.name + "-Saveas":
           this.currfile.cache = this.editor.value();
           return saveas();
+        case this.name + "-New":
+          this.currfile = "Untitled".asFileHandler();
+          this.currfile.cache = "";
+          return this.editor.value("");
       }
     };
 
