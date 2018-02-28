@@ -2214,7 +2214,16 @@
               }
               _OS.setting.system.packages = r.result ? r.result : void 0;
               _GUI.buildSystemMenu();
-              _GUI.pushServices(_OS.setting.system.startup.services);
+              _GUI.pushServices((function() {
+                var j, len, ref1, results;
+                ref1 = _OS.setting.system.startup.services;
+                results = [];
+                for (j = 0, len = ref1.length; j < len; j++) {
+                  v = ref1[j];
+                  results.push(v);
+                }
+                return results;
+              })());
               ref1 = _OS.setting.system.startup.apps;
               results = [];
               for (j = 0, len = ref1.length; j < len; j++) {
