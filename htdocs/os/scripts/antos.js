@@ -173,6 +173,7 @@
       },
       killAll: function(app) {
         var a, j, len, len1, ref, results, tmp, u;
+        console.log("kill all processes of " + app);
         if (!_PM.processes[app]) {
           return;
         }
@@ -191,6 +192,7 @@
       }
     },
     cleanup: function() {
+      console.log("Clean up system");
       ($("#wrapper")).empty();
       _GUI.clearTheme();
       _courrier.observable = riot.observable();
@@ -208,6 +210,7 @@
       return _PM.pidalloc = 0;
     },
     boot: function() {
+      console.log("Booting sytem");
       return _API.handler.auth(function(d) {
         if (d.error) {
           return _GUI.login();
@@ -1939,6 +1942,37 @@
         }
         scheme = $.parseHTML(x);
         ($("#wrapper")).append(scheme);
+        _courrier.observable.one("sysdockloaded", function() {
+          return ($(window)).bind('keydown', function(event) {
+            var app, c, dock, fnk, r;
+            dock = ($("#sysdock"))[0];
+            if (!dock) {
+              return;
+            }
+            app = dock.get("selectedApp");
+            if (!app) {
+              return true;
+            }
+            c = String.fromCharCode(event.which).toUpperCase();
+            fnk = void 0;
+            if (event.ctrlKey) {
+              fnk = "CTRL";
+            } else if (event.metaKey) {
+              fnk = "META";
+            } else if (event.shiftKey) {
+              fnk = "SHIFT";
+            } else if (event.altKey) {
+              fnk = "ALT";
+            }
+            if (!fnk) {
+              return;
+            }
+            r = app.shortcut(fnk, c);
+            if (!r) {
+              return event.preventDefault();
+            }
+          });
+        });
         riot.mount($("#syspanel", $("#wrapper")));
         riot.mount($("#sysdock", $("#wrapper")), {
           items: []
@@ -1946,31 +1980,6 @@
         riot.mount($("#contextmenu"));
         ($("#workspace")).contextmenu(function(e) {
           return _GUI.bindContextMenu(e);
-        });
-        ($(window)).bind('keydown', function(event) {
-          var app, c, fnk, r;
-          app = ($("#sysdock"))[0].get("selectedApp");
-          if (!app) {
-            return true;
-          }
-          c = String.fromCharCode(event.which).toUpperCase();
-          fnk = void 0;
-          if (event.ctrlKey) {
-            fnk = "CTRL";
-          } else if (event.metaKey) {
-            fnk = "META";
-          } else if (event.shiftKey) {
-            fnk = "SHIFT";
-          } else if (event.altKey) {
-            fnk = "ALT";
-          }
-          if (!fnk) {
-            return;
-          }
-          r = app.shortcut(fnk, c);
-          if (!r) {
-            return event.preventDefault();
-          }
         });
         desktop = $("#desktop");
         fp = _OS.setting.desktop.path.asFileHandler();
@@ -2194,7 +2203,7 @@
       _OS.systemSetting(conf);
       _GUI.loadTheme(_OS.setting.appearance.theme);
       _GUI.initDM();
-      _courrier.observable.one("syspanelloaded", function() {
+      return _courrier.observable.one("syspanelloaded", function() {
         return _API.packages.cache(function(ret) {
           if (ret.result) {
             return _API.packages.fetch(function(r) {
@@ -2235,7 +2244,6 @@
           }
         });
       });
-      return _courrier.observable.one("desktoploaded", function() {});
     }
   };
 
@@ -3240,7 +3248,6 @@
   _courrier = self.OS.courrier;
 
   this.onload = function() {
-    console.log("Booting the os");
     return self.OS.boot();
   };
 

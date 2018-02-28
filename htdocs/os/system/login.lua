@@ -23,6 +23,7 @@ if REQUEST.query.json ~= nil then
 		end
 		db:close()
 		std.cjson(cookie)
+		SESSION.iotos_user = request.username
 		local user = {
 	    	result = require("system.uman").userinfo(request.username),
 	    	error = false
