@@ -1932,31 +1932,6 @@
       return event.preventDefault();
     },
     initDM: function() {
-      ($(window)).bind('keydown', function(event) {
-        var app, c, fnk, r;
-        app = ($("#sysdock"))[0].get("selectedApp");
-        if (!app) {
-          return true;
-        }
-        c = String.fromCharCode(event.which).toUpperCase();
-        fnk = void 0;
-        if (event.ctrlKey) {
-          fnk = "CTRL";
-        } else if (event.metaKey) {
-          fnk = "META";
-        } else if (event.shiftKey) {
-          fnk = "SHIFT";
-        } else if (event.altKey) {
-          fnk = "ALT";
-        }
-        if (!fnk) {
-          return;
-        }
-        r = app.shortcut(fnk, c);
-        if (!r) {
-          return event.preventDefault();
-        }
-      });
       return _API.resource("schemes/dm.html", function(x) {
         var desktop, fp, scheme;
         if (!x) {
@@ -1971,6 +1946,31 @@
         riot.mount($("#contextmenu"));
         ($("#workspace")).contextmenu(function(e) {
           return _GUI.bindContextMenu(e);
+        });
+        ($(window)).bind('keydown', function(event) {
+          var app, c, fnk, r;
+          app = ($("#sysdock"))[0].get("selectedApp");
+          if (!app) {
+            return true;
+          }
+          c = String.fromCharCode(event.which).toUpperCase();
+          fnk = void 0;
+          if (event.ctrlKey) {
+            fnk = "CTRL";
+          } else if (event.metaKey) {
+            fnk = "META";
+          } else if (event.shiftKey) {
+            fnk = "SHIFT";
+          } else if (event.altKey) {
+            fnk = "ALT";
+          }
+          if (!fnk) {
+            return;
+          }
+          r = app.shortcut(fnk, c);
+          if (!r) {
+            return event.preventDefault();
+          }
         });
         desktop = $("#desktop");
         fp = _OS.setting.desktop.path.asFileHandler();
