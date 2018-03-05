@@ -8,27 +8,26 @@ packages._cache = function(y)
 	local p = vfs.ospath(y)
 	local f = io.open(p.."/packages.json", "w")
 	local has_cache = false
+	local i = 1
+	local meta = {}
 	if f then
 		local files = vfs.readDir(y)
 		for k,v in pairs(files) do
 			if v.type == "dir"  then
 				local f1 = io.open(vfs.ospath(v.path.."/package.json"))
 				if f1 then
-					if  first == false then 
-						f:write(",") 
-					else
-						first = false
-					end
+					
 					local name = std.basename(v.path)
-					f:write('"'..name..'":')
 					local mt = JSON.decodeString(f1:read("*all"))
 					mt.path = v.path
-					f:write(JSON.encode(mt))
+					meta[i] ='"'..name..'":'..JSON.encode(mt)
+					i = i+1
 					f1:close()
 					has_cache = true;
 				end
 			end
 		end
+		f:write(table.concat(meta, ","))
 		f:close()
 		if has_cache == false then
 			unix.delete(p.."/packages.json");
