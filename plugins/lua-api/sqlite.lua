@@ -37,13 +37,13 @@ function DBModel:insert(m)
 end
 
 function DBModel:get(id)
-	return sqlite.select(self.db, self.name,"id="..id)[0]
+	return sqlite.select(self.db, self.name, "*","id="..id)[1]
 end
 
 function DBModel:getAll()
-	local sql = "SELECT * FROM "..self.name
+	--local sql = "SELECT * FROM "..self.name
 	--return sqlite.select(self.db, self.name, "1=1")
-	local data = sqlite.select(self.db, self.name, "1=1")
+	local data = sqlite.select(self.db, self.name, "*", "1=1")
 	if data == nil then return nil end
 	local a = {}
 	for n in pairs(data) do table.insert(a, n) end
@@ -53,6 +53,7 @@ end
 
 function DBModel:find(cond)
 	local cnd = "1=1"
+	local sel = "*"
 	if cond.exp then
 		cnd = self:gencond(cond.exp)
 	end
@@ -69,8 +70,12 @@ function DBModel:find(cond)
 	if cond.limit then
 		cnd = cnd.." LIMIT "..cond.limit
 	end
+	if cond.fields then
+		sel = table.concat(cond.fields, ",")
+		--print(sel)
+	end
 	--print(cnd)
-	local data = sqlite.select(self.db, self.name, cnd)
+	local data = sqlite.select(self.db, self.name, sel, cnd)
 	if data == nil then return nil end
 	local a = {}
 	for n in pairs(data) do table.insert(a, n) end

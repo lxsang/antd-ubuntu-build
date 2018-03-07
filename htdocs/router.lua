@@ -48,9 +48,9 @@ function auth_or_die(msg)
 	local data = db:find(cond)
 	--print(JSON.encode(data))
 	db:close()
-	if data == nil or data[0] == nil then die(msg) end
+	if data == nil or data[1] == nil then die(msg) end
 	-- next time check the stamp
-	SESSION.iotos_user = data[0].username
+	SESSION.iotos_user = data[1].username
 	--print("Go for new thing")
 end
 
