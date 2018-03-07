@@ -46,7 +46,7 @@ shared.ospath = function(sharedid)
     local cond = { exp = { ["="] = { sid = sharedid } } }
     local data = db:find(cond) 
     db:close()
-    if data == nil or data[0] == nil then die("Cannot get shared file with: "..sharedid) end
-    return data[0].path
+    if data == nil or data[1] == nil then die("Cannot get shared file with: "..sharedid) end
+    return data[1].path
 end
 return shared;
