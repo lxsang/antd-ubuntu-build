@@ -8,6 +8,7 @@ User=root
 WorkingDirectory=/opt/www
 ExecStart=/opt/www/antd
 Restart=always
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
