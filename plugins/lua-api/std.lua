@@ -98,6 +98,9 @@ end
 function std.ws.fwrite(s)
 	std.ws_f(REQUEST.id,s)
 end
+function std.ws.write_bytes(arr)
+	std.ws_b(REQUEST.id,arr)
+end
 function std.ws.enable()
 	return REQUEST.query ~= nil and REQUEST.query["__web_socket__"] == "1"
 end
