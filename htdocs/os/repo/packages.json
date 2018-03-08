@@ -6,7 +6,8 @@
     "category": "Utilities",
     "author": "xsang.le@gmail.com",
     "version": "0.1",
-    "download": "https://os.lxsang.me/repo/DummyApp.zip"
+    "download": "https://os.lxsang.me/repo/DummyApp.zip",
+    "screenshot": "https://os.lxsang.me/repo/DummyApp.png"
   },
   {
     "className": "NotePad",
@@ -15,6 +16,7 @@
     "category": "Utilities",
     "author": "xsang.le@gmail.com",
     "version": "0.1",
-    "download": "https://os.lxsang.me/repo/NotePad.zip"
+    "download": "https://os.lxsang.me/repo/NotePad.zip",
+    "screenshot": "https://os.lxsang.me/repo/NotePad.png"
   }
 ]
