@@ -18,5 +18,15 @@
     "version": "0.1",
     "download": "https://os.lxsang.me/repo/NotePad.zip",
     "screenshot": "https://os.lxsang.me/repo/NotePad.png"
+  },
+  {
+    "className": "CodeBlock",
+    "name": "CodeBlock Editor",
+    "description": "Learn to programming using interlocking blocks. CodeBlock is based on Google Blockly library",
+    "category": "Development",
+    "author": "xsang.le@gmail.com",
+    "version": "0.1",
+    "download": "https://os.lxsang.me/repo/CodeBlock.zip",
+    "screenshot": "https://os.lxsang.me/repo/CodeBlock.png"
   }
 ]
