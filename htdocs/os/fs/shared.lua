@@ -12,7 +12,7 @@ shared.get =  function(sharedid)
             if(unix.exists(v.path)) then
                 local r = unix.file_stat(v.path)
                 if(r.error == nil) then
-                    r.path = "shared:///"..v.sid
+                    r.path = "shared://"..v.sid
                     r.filename = std.basename(v.path)
                     if r.mime == "application/octet-stream" then
                         r.mime = std.extra_mime(r.filename)
