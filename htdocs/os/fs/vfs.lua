@@ -13,7 +13,7 @@ vfs.ospath = function(path)
 		elseif prefix == "shared://" then
 			return require("fs.shared").ospath(std.trim(suffix,"/")) 
 		elseif prefix == "os://" then
-			return OSROOT..suffix
+			return OSROOT.."/"..suffix
 		else
 			return nil
 		end			
