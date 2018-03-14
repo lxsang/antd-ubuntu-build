@@ -10,7 +10,6 @@ if REQUEST.query ~= nil and REQUEST.query.cookie ~= nil then
 end
 HEADER = REQUEST.query.__xheader__
 HEADER.mobile = false
-unix = require("ulib")
 require("std")
 require("utils")
 require("extra_mime")
