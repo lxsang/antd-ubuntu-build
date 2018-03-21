@@ -32,6 +32,14 @@ function utils.escape(s)
 	return (s:gsub( "[\\'\"\n\t\b\f\r%%]", replacements ))
 end
 
+function utils.escape_pattern(s)
+	return s:gsub("[%(%)%.%+%-%*%?%[%]%^%$%%]", "%%%1")
+end
+
+function utils.unescape_pattern(s)
+	return s:gsub( "[%%]", "%%%%")
+end
+
 function utils.unescape(s)
 	local replacements = {
 		["\\\\"] 	= "\\" ,

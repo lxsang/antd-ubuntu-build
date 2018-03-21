@@ -78,11 +78,9 @@ end
 
 vfs.move = function(src,dest)
 	local file = std.basename(dest)
-	local folder = string.gsub(dest, file,"")
-	
+	local folder = string.gsub(dest, utils.escape_pattern(file),"")
 	
 	local sp,sm = vfs.checkperm(src,"write")
-	
 	if sp then
 		local dp,dm = vfs.checkperm(folder,"write")
 		if dp then
