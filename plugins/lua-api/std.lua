@@ -11,6 +11,7 @@ function std.status(code, msg)
 	std._status(REQUEST.id, code, msg)
 end
 function std.custom_header(k,v)
+	--print(k..":"..v)
 	std.t(k..": "..v)
 end
 function std.header_flush()
