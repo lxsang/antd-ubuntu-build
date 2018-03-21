@@ -40,6 +40,14 @@ function utils.unescape_pattern(s)
 	return s:gsub( "[%%]", "%%%%")
 end
 
+function utils.hex_to_char(x)
+	return string.char(tonumber(x, 16))
+end
+  
+function utils.decodeURI(url)
+	return url:gsub("%%(%x%x)", utils.hex_to_char)
+end
+
 function utils.unescape(s)
 	local replacements = {
 		["\\\\"] 	= "\\" ,
