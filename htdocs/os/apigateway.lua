@@ -7,6 +7,11 @@ else
 	std.json()
 end
 local exec_with_user_priv = function(data)
+    local uid = unix.uid(SESSION.iotos_user)
+	if not unix.setgid(uid.gid) or not unix.setuid(uid.id) then
+	    echo("Cannot set permission to execute the code")
+	    return
+    end
 	local r,e
 	e = "{'error': 'Unknow function'}"
 	if data.code then
@@ -29,9 +34,6 @@ if(is_auth()) then
 		unix.waitpid(pid)
 		print("Parent exit")
 	else -- child
-		local uid = unix.uid(SESSION.iotos_user)
-		unix.setuid(uid.id)
-		unix.setgid(uid.gid)
 		if use_ws then
 			if std.ws.enable() then
 				-- read header
