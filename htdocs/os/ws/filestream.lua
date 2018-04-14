@@ -1,3 +1,4 @@
+auth_or_die("User unauthorized. Please login")
 if std.ws.enable() then
 	-- read header
 	local streaming = true
