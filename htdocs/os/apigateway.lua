@@ -16,10 +16,28 @@ local exec_with_user_priv = function(data)
 	e = "{'error': 'Unknow function'}"
 	if data.code then
 		r,e = load(data.code)
-		if r then echo(JSON.encode(r())) else echo(e) end
+		if r then
+			local status,result = pcall(r)
+			if(status) then
+				echo(JSON.encode(result))
+			else
+				echo(result)
+			end 
+		else
+			echo(e)
+		end
 	elseif data.path then
 		r,e = loadfile(data.path)
-		if r then echo(JSON.encode(r(data.parameters))) else echo(e) end
+		if r then
+			local status,result = pcall(r, data.parameters)
+			if(status) then
+				echo(JSON.encode(result))
+			else
+				echo(result)
+			end 
+		else
+			echo(e)
+		end
 	else
 		echo(e)
 	end
