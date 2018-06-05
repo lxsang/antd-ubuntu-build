@@ -19,7 +19,7 @@ view.render = function(action, data, sort, min, max)
         fn, e = loadscript(path.."/detail.ls")
         --echo(data[0].rendered)
         --fn = require("blog.view.compiledd")
-    if action == "analyse" then
+    elseif action == "analyse" then
         fn, e = loadscript(path.."/analyse.ls")
     else
         --fn = require("blog.view.compiledd")
