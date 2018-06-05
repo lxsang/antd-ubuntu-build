@@ -38,9 +38,11 @@
     local db = require("db.model").get(BLOG_ADMIN,"st_similarity", nil)
     local similar_posts = nil
     if db then
-        local records = db:find({["="] = {pid = data.id}})
+        local records = db:find({ exp = {["="] = {pid = data.id}}, order = {score = "DESC"}})
+        --echo("records size is #"..#records)
         local pdb = require("db.model").get(BLOG_ADMIN,"blogs", nil)
         if(pdb) then
+            similar_posts = {}
             for k,v in pairs(records) do
                 similar_posts[k] = { st = v, post = pdb:get(v.sid) }
             end
@@ -90,7 +92,7 @@
         <?lua
             echo("<ul>")
             for k,v in pairs(similar_posts) do
-                echo("<li><a href='./r:id:"..v.st.sid.."'">v.post.title.."</a></li>")
+                echo("<li><a href='./r:id:"..v.st.sid.."'>"..v.post.title.."</a> (<b>Score</b>: "..string.format("%2.2f",v.st.score)..")</li>")
             end
             echo("</ul>")
         end?>
