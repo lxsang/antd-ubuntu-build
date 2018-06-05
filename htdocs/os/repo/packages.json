@@ -2,55 +2,21 @@
   {
     "className": "DummyApp",
     "name": "Antos features",
-    "description": "https://os.lxsang.me/repo/DummyApp/DummyApp.md",
+    "description": "Antos features showcase",
     "category": "Utilities",
     "author": "xsang.le@gmail.com",
     "version": "0.1",
-    "download": "https://os.lxsang.me/repo/DummyApp/DummyApp.zip"
+    "download": "https://os.lxsang.me/repo/DummyApp.zip",
+    "screenshot": "https://os.lxsang.me/repo/DummyApp.png"
   },
   {
     "className": "NotePad",
     "name": "NotePad Editor",
-    "description": "https://os.lxsang.me/repo/NotePad/NotePad.md",
+    "description": "Default text editor for antOS",
     "category": "Utilities",
     "author": "xsang.le@gmail.com",
     "version": "0.1",
-    "download": "https://os.lxsang.me/repo/NotePad/NotePad.zip"
-  },
-  {
-    "className": "CodeBlock",
-    "name": "CodeBlock Editor",
-    "description": "https://os.lxsang.me/repo/CodeBlock/CodeBlock.md",
-    "category": "Development",
-    "author": "xsang.le@gmail.com",
-    "version": "0.1",
-    "download": "https://os.lxsang.me/repo/CodeBlock/CodeBlock.zip"
-  },
-  {
-    "className": "GraphEditor",
-    "name": "Graph editor",
-    "description": "https://os.lxsang.me/repo/GraphEditor/GraphEditor.md",
-    "category": "Offices",
-    "author": "xsang.le@gmail.com",
-    "version": "0.1",
-    "download": "https://os.lxsang.me/repo/GraphEditor/GraphEditor.zip"
-  },
-  {
-    "className": "Blogger",
-    "name": "Blogging backend",
-    "description": "https://os.lxsang.me/repo/Blogger/Blogger.md",
-    "category": "Offices",
-    "author": "xsang.le@gmail.com",
-    "version": "0.1",
-    "download": "https://os.lxsang.me/repo/Blogger/Blogger.zip"
-  },
-   {
-    "className": "AntOSDK",
-    "name": "AntOS Development Kit",
-    "description": "https://os.lxsang.me/repo/AntOSDK/AntOSDK.md",
-    "category": "Development",
-    "author": "xsang.le@gmail.com",
-    "version": "0.0.1a",
-    "download": "https://os.lxsang.me/repo/AntOSDK/AntOSDK.zip"
+    "download": "https://os.lxsang.me/repo/NotePad.zip",
+    "screenshot": "https://os.lxsang.me/repo/NotePad.png"
   }
 ]
