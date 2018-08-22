@@ -48,10 +48,12 @@ end
 function std.fb(v)
 	std._fb(REQUEST.id,v)
 end
-function std.setCookie(t,v)
-	std._setCookie(REQUEST.id,t,v)
+function std.setCookie(t,v,p)
+	p = p or ""
+	std._setCookie(REQUEST.id,t,v,p)
 end
-function std.cjson(v)
+function std.cjson(v, p)
+	
 	std.setCookie("application/json; charset=utf-8",v)
 end
 function std.chtml(v)
