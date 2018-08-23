@@ -12,6 +12,10 @@ function BaseObject:debug(msg)
     self:log(msg, "DEBUG")
 end
 
+function BaseObject:print()
+    print(self.class)
+end
+
 function BaseObject:error(msg, trace)
     html()
     echo(msg)

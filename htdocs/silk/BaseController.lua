@@ -24,6 +24,10 @@ function BaseController:initialize()
     self.template = Template:new{registry = self.registry}
 end
 
+function BaseController:print(...)
+    return self:actionnotfound("print")
+end
+
 function BaseController:redirect(url)
     std.status(301, "Moved Permanently")
     std.custom_header("Content-Type","text/html")
