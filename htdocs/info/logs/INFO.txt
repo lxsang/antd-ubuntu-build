@@ -1,6 +1,0 @@
-[INFO]: Controller: {"action":"index","name":"index","args":[]}
-[INFO]: Controller: {"action":"index","name":"user","args":[]}
-[INFO]: Controller: {"action":"index","name":"toc","args":[]}
-[INFO]: Controller: {"action":"get","name":"asset","args":["rst","gscripts","showdown.min.js"]}
-[INFO]: Controller: {"args":["style.css"],"action":"get","name":"asset"}
-[INFO]: Controller: {"name":"asset","action":"get","args":["rst","font-awesome.css"]}

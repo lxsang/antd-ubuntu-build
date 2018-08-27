@@ -1,9 +1,11 @@
 -- create class
-BaseController = BaseObject:extends{
-    class="BaseController",
-    registry = {},
-    models = {},
-    main = false }
+BaseObject:subclass("BaseController",
+    {
+        registry = {},
+        models = {},
+        main = false
+    })
+    
 -- set the name here in each subclasses
 function BaseController:initialize()
     for k, v in pairs(self.models) do
@@ -68,7 +70,7 @@ function BaseController:modelnotfound(...)
 end
 -- The not found controller
 
-NotfoundController = BaseController:extends{ registry = {}, models = {} }
+BaseController:subclass("NotfoundController",{ registry = {}, models = {} })
 
 function NotfoundController:index(...)
     local args = {...}
@@ -78,7 +80,7 @@ function NotfoundController:index(...)
 end
 
 -- The asset controller for the static file
-AssetController = BaseController:extends{name= "AssetController",registry={}, models={}}
+BaseController:subclass("AssetController", {registry={}, models={}})
 function AssetController:index(...)
     local args = {...}
     return self:get(table.unpack(args))
