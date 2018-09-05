@@ -33,7 +33,7 @@ function echo(m)
     if m then std.t(m) else std.t("Undefined value") end
 end
 
-function loadscript(file)
+function loadscript(file, args)
     local f = io.open(file, "rb")
     local content = ""
     if f then
@@ -42,6 +42,9 @@ function loadscript(file)
         local s,e, mt
         local mtbegin = true -- find begin of scrit, 0 end of scrit
         local i = 1
+        if args then
+            pro = "local fn = function("..table.concat( args, ",")..")"
+        end
         for line in io.lines(file) do
             line = std.trim(line, " ")
             if(line ~= "") then
