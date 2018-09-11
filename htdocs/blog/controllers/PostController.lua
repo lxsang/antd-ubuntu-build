@@ -163,5 +163,6 @@ function PostController:analyse(n)
     else
         self.template:set("message", "Cannot analyse")
     end
+    self.template:set("title", "TFIDF-analyse")
     return true
 end
