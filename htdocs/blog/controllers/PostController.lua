@@ -159,9 +159,9 @@ function PostController:analyse(n)
                 self.analytical:create(record)
             end
         end
-        self.template:set(message, "Analyse complete")
+        self.template:set("message", "Analyse complete")
     else
-        self.template:set(message, "Cannot analyse")
+        self.template:set("message", "Cannot analyse")
     end
     return true
 end
