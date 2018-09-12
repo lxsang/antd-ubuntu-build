@@ -9,8 +9,8 @@ shared.get =  function(sharedid)
         local i = 1
         local ret = {}
         for k,v in pairs(data) do
-            if(unix.exists(v.path)) then
-                local r = unix.file_stat(v.path)
+            if(ulib.exists(v.path)) then
+                local r = ulib.file_stat(v.path)
                 if(r.error == nil) then
                     r.path = "shared://"..v.sid
                     r.filename = std.basename(v.path)
