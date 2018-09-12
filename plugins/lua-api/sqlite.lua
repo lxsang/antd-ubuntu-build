@@ -25,6 +25,8 @@ function DBModel:insert(m)
 			table.insert(keys,k)
 			if type(v) == "number" then
 				table.insert(values, v)
+			elseif type(v) == "boolean" then
+				table.insert( values, v and 1 or 0 )
 			else
 				local t = "\""..v:gsub('"', '""').."\""
 				table.insert(values,t)
@@ -94,6 +96,8 @@ function DBModel:update(m)
 		for k,v in pairs(m) do
 			if(type(v)== "number") then
 				table.insert(lst,k.."="..v)
+			elseif type(v) == "boolean" then
+				table.insert( lst, k.."="..(v and 1 or 0) )
 			else
 				table.insert(lst,k.."=\""..v:gsub('"', '""').."\"")
 			end
