@@ -1281,7 +1281,7 @@ var mobileConsole = (function () {
     return ref;
   }
 
-  function init() {
+  function init() { 
     if (!status.initialized) {
       status.initialized = true;
       //populate references
@@ -1309,9 +1309,9 @@ var mobileConsole = (function () {
   }
 
   //autorun if mobile
-  if (isMobile() || options.overrideAutorun) {
-    init();
-  }
+  //if (isMobile() || options.overrideAutorun) {
+//    init();
+  //}
 
   //expose the mobileConsole
   return {

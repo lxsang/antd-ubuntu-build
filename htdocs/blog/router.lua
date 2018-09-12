@@ -5,7 +5,7 @@
 -- some global variables
 DIR_SEP = "/"
 WWW_ROOT = "/opt/www/htdocs/blog"
-HTTP_ROOT = "https://blog.localhost:9195"
+HTTP_ROOT = "https://blog.lxsang.me"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -14,7 +14,7 @@ MODEL_ROOT = BASE_FRW.."blog.models"
 -- file path: path/to/file
 VIEW_ROOT = WWW_ROOT..DIR_SEP.."views"
 LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
-POST_LIMIT = 2
+POST_LIMIT = 10
 -- require needed library
 require(BASE_FRW.."silk.api")
 
@@ -25,7 +25,7 @@ end
 -- registry object store global variables
 local REGISTRY = {}
 -- set logging level
-REGISTRY.logger = Logger:new{ levels = {INFO = true, ERROR = true, DEBUG = true}}
+REGISTRY.logger = Logger:new{ levels = {INFO = false, ERROR = true, DEBUG = false}}
 REGISTRY.db = DBHelper:new{db="mrsang"}
 REGISTRY.layout = 'default'
 REGISTRY.fileaccess = true
