@@ -24,6 +24,7 @@ local REGISTRY = {}
 REGISTRY.logger = Logger:new{ levels = {INFO = false, ERROR = true, DEBUG = false}}
 REGISTRY.db = DBHelper:new{db="mrsang"}
 REGISTRY.layout = 'default'
+REGISTRY.fileaccess = true
 
 REGISTRY.db:open()
 local router = Router:new{registry = REGISTRY}

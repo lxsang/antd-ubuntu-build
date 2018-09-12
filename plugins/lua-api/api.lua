@@ -10,6 +10,11 @@ if REQUEST.query ~= nil and REQUEST.query.cookie ~= nil then
 end
 HEADER = REQUEST.query.__xheader__
 HEADER.mobile = false
+
+if HEADER["User-Agent"] and HEADER["User-Agent"]:match("Mobi") then
+    HEADER.mobile = true
+end
+
 require("std")
 require("utils")
 require("extra_mime")
@@ -121,4 +126,20 @@ end
 -- enable extra mime
 
 -- run the file
-require('router')
+
+
+local m, s, p  = has_module(REQUEST.path)
+if m then
+    -- run the correct module
+    if s then
+		local r,e = loadscript(p)
+		if r then r() else unknow(e) end
+    else
+        require(p)
+    end
+else
+	unknow("Resource not found for request "..REQUEST.path)
+end
+
+
+--require('router')
