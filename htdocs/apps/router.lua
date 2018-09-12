@@ -5,7 +5,7 @@
 -- some global variables
 DIR_SEP = "/"
 WWW_ROOT = "/opt/www/htdocs/apps"
-HTTP_ROOT = "https://10.1.10.84:9195/apps"
+HTTP_ROOT = "https://apps.lxsang.me"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class

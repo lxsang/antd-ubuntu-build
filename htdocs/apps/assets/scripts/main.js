@@ -40,7 +40,7 @@
       this.name = name;
     }
 
-    BaseObject.prototype.ready = function() {
+    BaseObject.prototype.readi = function() {
       var me;
       me = this;
       return new Promise(function(r, e) {
@@ -90,9 +90,9 @@
 
     APIManager.prototype.init = function(cname) {
       console.log(cname);
-      return this.ready().then(function() {
+      return this.readi().then(function() {
         if (mobilecheck()) {
-          mobileConsole.init();
+          //mobileConsole.init();
         }
         if (!cname || cname === "") {
           return;
@@ -110,7 +110,7 @@
 
   })(window.classes.BaseObject);
 
-  APIManager.dependencies = ["/assets/scripts/mobile_console.js"];
+  //APIManager.dependencies = ["/assets/scripts/mobile_console.js"];
 
   makeclass("APIManager", APIManager);
 
@@ -124,7 +124,7 @@
     MarkOn.prototype.init = function() {
       var me;
       me = this;
-      return this.ready().then(function() {
+      return this.readi().then(function() {
         return me.editor = new SimpleMDE({
           element: $("#editor")[0]
         });
