@@ -1,1 +1,15 @@
-httpd.c:74: Using configuration : /opt/www/config.ini
+httpd.c:168: Using configuration : configlocal.ini
+httpd.c:170: SSL enable 1
+httpd.c:171: SSL cert /opt/server.crt
+httpd.c:172: SSL key /opt/server.key
+back log is 5000
+httpd.c:218: httpd running on port 9195
+httpd.c:240: Client IP: 127.0.0.1
+http_server.c:558: Query: 
+http_server.c:74: Path is : /opt/www/htdocs/ph7/php/ 
+http_server.c:970: Client 4
+http_server.c:971: Path : 'ph7/php'
+http_server.c:972: Method:GET
+http_server.c:973: Plugin name 'ph7'
+http_server.c:974: Query path. 'php'
+ph7-wrapper.c:11: INIT PHP HANDLER 
