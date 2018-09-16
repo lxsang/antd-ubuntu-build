@@ -1,6 +1,7 @@
 ![](https://os.lxsang.me/repo/OpenPage/OpenPage.png)
 # OpenPage: ODT (Open Document Text) editor alpha
-**OpenPage** is an AntOS application developed in-browser using AntOSDK. It is a Pure Javascript based rich text editor compatible with Open Document Format. 
+**OpenPage** is an AntOS application developed in-browser using AntOSDK. It is a Pure Javascript based rich text editor compatible with Open Document Format.
+
 **Feature:**
 * Open, view and edit *.odt* documents
 * Offer various formatting style to text
@@ -8,6 +9,6 @@
 * Insert link, image
 * Embeded fonts
 * Save documents as ODF format so that it can be compatible with desktop applications like Open Office
-* 
+ 
 **Credit:**
 OpenPage is heavily based on the WebODF javascript library: https://webodf.org
