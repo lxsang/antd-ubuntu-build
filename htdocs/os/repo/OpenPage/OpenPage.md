@@ -1,4 +1,4 @@
-![](https://os.lxsang.me/repo/AntOSDK/OpenPage.png)
+![](https://os.lxsang.me/repo/OpenPage/OpenPage.png)
 # OpenPage: ODT (Open Document Text) editor alpha
 **OpenPage** is an AntOS application developed in-browser using AntOSDK. It is a Pure Javascript based rich text editor compatible with Open Document Format. 
 **Feature:**
