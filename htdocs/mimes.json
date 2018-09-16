@@ -1,4 +1,9 @@
 {
+    "odt": { "mime": "application/vnd.oasis.opendocument.text", "binary": true },
+    "viz": {
+        "mime": "text/vnd.graphviz",
+        "binary": false
+    },
     "viz": {
         "mime": "text/vnd.graphviz",
         "binary": false
