@@ -70,6 +70,15 @@
     "author": "xsang.le@gmail.com",
     "version": "0.0.5-a",
     "download": "https://os.lxsang.me/repo/AntOSDK/AntOSDK.zip"
+  },
+  {
+    "className": "OpenPage",
+    "name": "ODT Document Editor",
+    "description": "https://os.lxsang.me/repo/OpenPage/OpenPage.md",
+    "category": "Office",
+    "author": "xsang.le@gmail.com",
+    "version": "0.0.5-a",
+    "download": "https://os.lxsang.me/repo/OpenPage/OpenPage.zip"
   }
 ]
 
