@@ -1,15 +1,105 @@
-httpd.c:168: Using configuration : configlocal.ini
-httpd.c:170: SSL enable 1
-httpd.c:171: SSL cert /opt/server.crt
-httpd.c:172: SSL key /opt/server.key
-back log is 5000
-httpd.c:218: httpd running on port 9195
-httpd.c:240: Client IP: 127.0.0.1
-http_server.c:558: Query: 
-http_server.c:74: Path is : /opt/www/htdocs/ph7/php/ 
-http_server.c:970: Client 4
-http_server.c:971: Path : 'ph7/php'
-http_server.c:972: Method:GET
-http_server.c:973: Plugin name 'ph7'
-http_server.c:974: Query path. 'php'
-ph7-wrapper.c:11: INIT PHP HANDLER 
+==11773== Memcheck, a memory error detector
+==11773== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==11773== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==11773== Command: ./httpd configlocal.ini
+==11773== Parent PID: 12280
+==11773== 
+==11773== Thread 3:
+==11773== Syscall param write(buf) points to uninitialised byte(s)
+==11773==    at 0x5BDF4BD: ??? (syscall-template.S:84)
+==11773==    by 0x77D01A3: WriteToRFBServer (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x77C73EF: SetFormatAndEncodings (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x75B9B4B: resize (wvnc.c:210)
+==11773==    by 0x77D1BBC: rfbInitClient (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x75BA152: open_session (wvnc.c:366)
+==11773==    by 0x75BA39C: consume_client (wvnc.c:438)
+==11773==    by 0x75B98E9: process (wvnc.c:154)
+==11773==    by 0x75BA567: handle (wvnc.c:496)
+==11773==    by 0x405A4B: execute_plugin (http_server.c:999)
+==11773==    by 0x402F38: accept_request (http_server.c:78)
+==11773==    by 0x5BD66B9: start_thread (pthread_create.c:333)
+==11773==  Address 0x75b4ff1 is on thread 3's stack
+==11773==  in frame #2, created by SetFormatAndEncodings (???:)
+==11773== 
+==11773== Syscall param write(buf) points to uninitialised byte(s)
+==11773==    at 0x5BDF4BD: ??? (syscall-template.S:84)
+==11773==    by 0x77D01A3: WriteToRFBServer (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x77C73EF: SetFormatAndEncodings (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x77D1BC8: rfbInitClient (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x75BA152: open_session (wvnc.c:366)
+==11773==    by 0x75BA39C: consume_client (wvnc.c:438)
+==11773==    by 0x75B98E9: process (wvnc.c:154)
+==11773==    by 0x75BA567: handle (wvnc.c:496)
+==11773==    by 0x405A4B: execute_plugin (http_server.c:999)
+==11773==    by 0x402F38: accept_request (http_server.c:78)
+==11773==    by 0x5BD66B9: start_thread (pthread_create.c:333)
+==11773==  Address 0x75b5051 is on thread 3's stack
+==11773==  in frame #2, created by SetFormatAndEncodings (???:)
+==11773== 
+==11773== Syscall param write(buf) points to uninitialised byte(s)
+==11773==    at 0x5BDF4BD: ??? (syscall-template.S:84)
+==11773==    by 0x589DCB4: ??? (in /lib/x86_64-linux-gnu/libcrypto.so.1.0.0)
+==11773==    by 0x589BCDB: BIO_write (in /lib/x86_64-linux-gnu/libcrypto.so.1.0.0)
+==11773==    by 0x5547BF1: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x55482E4: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x5042C8E: antd_send (handle.c:81)
+==11773==    by 0x5046B6B: ws_send_frame (ws.c:168)
+==11773==    by 0x5046C4E: ws_send_binary (ws.c:197)
+==11773==    by 0x75B9E34: update (wvnc.c:290)
+==11773==    by 0x77CBE04: HandleRFBServerMessage (in /usr/lib/x86_64-linux-gnu/libvncclient.so.1.0.0)
+==11773==    by 0x75BA213: open_session (wvnc.c:392)
+==11773==    by 0x75BA39C: consume_client (wvnc.c:438)
+==11773==  Address 0x6257470 is 1,216 bytes inside a block of size 17,584 alloc'd
+==11773==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==11773==    by 0x57EDE77: CRYPTO_malloc (in /lib/x86_64-linux-gnu/libcrypto.so.1.0.0)
+==11773==    by 0x554AAFC: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x554AB67: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x554C09C: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x554C813: ??? (in /lib/x86_64-linux-gnu/libssl.so.1.0.0)
+==11773==    by 0x406577: main (httpd.c:269)
+==11773== 
+==11773== 
+==11773== HEAP SUMMARY:
+==11773==     in use at exit: 3,289,009 bytes in 3,078 blocks
+==11773==   total heap usage: 41,620 allocs, 38,542 frees, 234,510,501 bytes allocated
+==11773== 
+==11773== Thread 1:
+==11773== 24 bytes in 1 blocks are definitely lost in loss record 194 of 377
+==11773==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==11773==    by 0x75BA510: ???
+==11773==    by 0x405A4B: execute_plugin (http_server.c:999)
+==11773==    by 0x402F38: accept_request (http_server.c:78)
+==11773==    by 0x5BD66B9: start_thread (pthread_create.c:333)
+==11773== 
+==11773== 272 bytes in 1 blocks are possibly lost in loss record 312 of 377
+==11773==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==11773==    by 0x40138A4: allocate_dtv (dl-tls.c:322)
+==11773==    by 0x40138A4: _dl_allocate_tls (dl-tls.c:539)
+==11773==    by 0x5BD726E: allocate_stack (allocatestack.c:588)
+==11773==    by 0x5BD726E: pthread_create@@GLIBC_2.2.5 (pthread_create.c:539)
+==11773==    by 0x4065B5: main (httpd.c:276)
+==11773== 
+==11773== 3,145,728 bytes in 1 blocks are definitely lost in loss record 377 of 377
+==11773==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==11773==    by 0x75B9A91: ???
+==11773==    by 0x77D1BBC: ???
+==11773==    by 0x75BA152: ???
+==11773==    by 0x75BA39C: ???
+==11773==    by 0x75B98E9: ???
+==11773==    by 0x75BA567: ???
+==11773==    by 0x405A4B: execute_plugin (http_server.c:999)
+==11773==    by 0x402F38: accept_request (http_server.c:78)
+==11773==    by 0x5BD66B9: start_thread (pthread_create.c:333)
+==11773== 
+==11773== LEAK SUMMARY:
+==11773==    definitely lost: 3,145,752 bytes in 2 blocks
+==11773==    indirectly lost: 0 bytes in 0 blocks
+==11773==      possibly lost: 272 bytes in 1 blocks
+==11773==    still reachable: 142,985 bytes in 3,075 blocks
+==11773==         suppressed: 0 bytes in 0 blocks
+==11773== Reachable blocks (those to which a pointer was found) are not shown.
+==11773== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==11773== 
+==11773== For counts of detected and suppressed errors, rerun with: -v
+==11773== Use --track-origins=yes to see where uninitialised values come from
+==11773== ERROR SUMMARY: 28 errors from 6 contexts (suppressed: 0 from 0)

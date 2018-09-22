@@ -5,7 +5,7 @@
 -- some global variables
 DIR_SEP = "/"
 WWW_ROOT = "/opt/www/htdocs/apps"
-HTTP_ROOT = "https://apps.lxsang.me"
+HTTP_ROOT = "https://10.1.10.84:9195/apps"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -17,13 +17,14 @@ LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
 
 -- require needed library
 require(BASE_FRW.."silk.api")
-
+POLICY.mimes["application/wasm"] = true
 -- registry object store global variables
 local REGISTRY = {}
 -- set logging level
 REGISTRY.logger = Logger:new{ levels = {INFO = true, ERROR = true, DEBUG = true}}
 REGISTRY.db = DBHelper:new{db="iosapps"}
 REGISTRY.layout = 'default'
+REGISTRY.fileaccess = true
 
 REGISTRY.db:open()
 local router = Router:new{registry = REGISTRY}

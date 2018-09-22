@@ -4,10 +4,6 @@
         "mime": "text/vnd.graphviz",
         "binary": false
     },
-    "viz": {
-        "mime": "text/vnd.graphviz",
-        "binary": false
-    },
     "py": {
         "mime": "text/x-python",
         "binary": false
