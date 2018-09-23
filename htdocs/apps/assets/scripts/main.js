@@ -204,10 +204,10 @@
           return me.client.connect("/opt/www/vnc.conf", {
             bbp: 32,
             flag: 3,
-            quality: 10
+            quality: 20
           });
         });
-        $("#tbstatus").html("32bbp, compress JPEG & ZLib, JPEG quality 10%");
+        $("#tbstatus").html("32bbp, compress JPEG & ZLib, JPEG quality 20%");
         $("#stop").click(function(e) {
           return me.client.disconnect();
         });
