@@ -181,7 +181,7 @@
       var args, me;
       args = {
         element: 'canvas',
-        ws: 'wss://localhost:9192/wvnc',
+        ws: 'wss://lxsang.me/wvnc',
         worker: '/assets/scripts/decoder.js'
       };
       this.client = new WVNC(args);
