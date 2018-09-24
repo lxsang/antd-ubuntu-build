@@ -5,7 +5,7 @@
 -- some global variables
 DIR_SEP = "/"
 WWW_ROOT = "/opt/www/htdocs/apps"
-HTTP_ROOT = "https://10.1.10.84:9195/apps"
+HTTP_ROOT = "https://apps.lxsang.me"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -21,7 +21,7 @@ POLICY.mimes["application/wasm"] = true
 -- registry object store global variables
 local REGISTRY = {}
 -- set logging level
-REGISTRY.logger = Logger:new{ levels = {INFO = true, ERROR = true, DEBUG = true}}
+REGISTRY.logger = Logger:new{ levels = {INFO = false, ERROR = true, DEBUG = false}}
 REGISTRY.db = DBHelper:new{db="iosapps"}
 REGISTRY.layout = 'default'
 REGISTRY.fileaccess = true
