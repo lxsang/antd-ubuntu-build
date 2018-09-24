@@ -1,5 +1,5 @@
 # Welcome to AntOS v0.2.4-alpha
-***[[ WARNING: Due to some recent attacks on my server, the web terminal access is disabled for the user: demo. You can still login, but you can't  use the shell ]]***
+***[[ WARNING: Then terminal access has been reenabled, however outgoing network is disabled on user demo ]]***
 
 Github: [https://github.com/lxsang/antos](https://github.com/lxsang/antos)
 
