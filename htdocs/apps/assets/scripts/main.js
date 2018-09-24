@@ -203,7 +203,7 @@
         $("#connect").click(function(e) {
           return me.client.connect("/opt/www/vnc.conf", {
             bbp: 32,
-            flag: 1,
+            flag: 3,
             quality: 30
           });
         });
