@@ -203,11 +203,11 @@
         $("#connect").click(function(e) {
           return me.client.connect("/opt/www/vnc.conf", {
             bbp: 32,
-            flag: 3,
-            quality: 40
+            flag: 1,
+            quality: 30
           });
         });
-        $("#tbstatus").html("32bbp, compression JPEG & ZLib, JPEG quality 40%");
+        $("#tbstatus").html("32bbp, compression JPEG & ZLib, JPEG quality 30%");
         $("#stop").click(function(e) {
           return me.client.disconnect();
         });
