@@ -197,17 +197,17 @@
         });
       };
       this.client.oncopy = function(text) {
-        return ($("#clipboard"))[0].value = text;
+        return cosole.log(text);
       };
       return this.client.init().then(function() {
         $("#connect").click(function(e) {
           return me.client.connect("/opt/www/vnc.conf", {
             bbp: 32,
             flag: 3,
-            quality: 20
+            quality: 40
           });
         });
-        $("#tbstatus").html("32bbp, compress JPEG & ZLib, JPEG quality 20%");
+        $("#tbstatus").html("32bbp, compression JPEG & ZLib, JPEG quality 40%");
         $("#stop").click(function(e) {
           return me.client.disconnect();
         });
