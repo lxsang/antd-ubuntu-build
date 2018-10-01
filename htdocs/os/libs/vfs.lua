@@ -118,7 +118,6 @@ vfs.write = function(path,data)
 				local b64data = string.gsub(data, header,"")
 				local barr = std.b64decode(b64data)
 				if std.isBinary(osfile) then
-					print("OHHHHHHHHHHH write binary file ")
 					bytes.write(barr,osfile)
 				else
 					local f = io.open(osfile, "w")
