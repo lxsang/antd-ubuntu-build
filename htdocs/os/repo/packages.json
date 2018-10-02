@@ -32,7 +32,7 @@
     "description": "https://os.lxsang.me/repo/GraphEditor/GraphEditor.md",
     "category": "Offices",
     "author": "xsang.le@gmail.com",
-    "version": "0.0.1-a",
+    "version": "0.0.4-a",
     "download": "https://os.lxsang.me/repo/GraphEditor/GraphEditor.zip"
   },
   {
@@ -77,8 +77,17 @@
     "description": "https://os.lxsang.me/repo/OpenPage/OpenPage.md",
     "category": "Office",
     "author": "xsang.le@gmail.com",
-    "version": "0.0.1-a",
+    "version": "0.0.2-a",
     "download": "https://os.lxsang.me/repo/OpenPage/OpenPage.zip"
+  },
+  {
+    "className": "RemoteDesktop",
+    "name": "VNC remote desktop",
+    "description": "https://os.lxsang.me/repo/RemoteDesktop/RemoteDesktop.md",
+    "category": "System",
+    "author": "xsang.le@gmail.com",
+    "version": "0.0.1-a",
+    "download": "https://os.lxsang.me/repo/RemoteDesktop/RemoteDesktop.zip"
   }
 ]
 
