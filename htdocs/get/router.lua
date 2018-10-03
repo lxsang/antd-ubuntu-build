@@ -4,8 +4,8 @@
 -- ^\/apps\/+(.*)$ = /apps/router.lua?r=<1>&<query>
 -- some global variables
 DIR_SEP = "/"
-WWW_ROOT = "/opt/www/htdocs/apps"
-HTTP_ROOT = "https://10.1.10.84:9195/apps"
+WWW_ROOT = "/opt/www/htdocs/get"
+HTTP_ROOT = "https://get.makeand.run"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -17,39 +17,37 @@ LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
 
 -- require needed library
 require(BASE_FRW.."silk.api")
-POLICY.mimes["application/wasm"] = true
+
+function NotfoundController:index(...)
+    local args = {...}
+    local name = args[1] or nil
+    if not name then
+        return self:error("Unknown script")
+    end
+    local path = WWW_ROOT..DIR_SEP.."assets"..DIR_SEP.."shs"..DIR_SEP..name..".sh"
+
+    if ulib.exists(path) then
+        std.header("text/plain")
+        std.f(path)
+    else
+        self:error("No script found")
+    end
+    return false
+end
+
 -- registry object store global variables
 local REGISTRY = {}
 -- set logging level
-REGISTRY.logger = Logger:new{ levels = {INFO = true, ERROR = true, DEBUG = true}}
-REGISTRY.db = DBHelper:new{db="iosapps"}
-REGISTRY.layout = 'default'
-REGISTRY.fileaccess = true
+REGISTRY.logger = Logger:new{ levels = {INFO = false, ERROR = false, DEBUG = false}}
 
-REGISTRY.db:open()
+REGISTRY.layout = 'default'
+REGISTRY.fileaccess = false
+
 local router = Router:new{registry = REGISTRY}
 REGISTRY.router = router
 router:setPath(CONTROLLER_ROOT)
 --router:route('edit', 'post/edit', "ALL" )
 
--- example of depedencies to the current main route
--- each layout may have different dependencies
-local default_routes_dependencies = {
-    edit = {
-        url = "post/edit",
-        visibility = {
-            shown = true,
-            routes = {
-                ["post/index"] = true
-            }
-        }
-    },
-    --category = {
-    --    url = "cat/index",
-    --    visibility = "ALL"
-    --}
-}
 router:route('default', default_routes_dependencies )
 router:delegate()
-if REGISTRY.db then REGISTRY.db:close() end
 
