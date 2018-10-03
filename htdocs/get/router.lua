@@ -24,7 +24,7 @@ function NotfoundController:index(...)
     if not name then
         return self:error("Unknown script")
     end
-    local path = WWW_ROOT..DIR_SEP.."assets"..DIR_SEP.."shs"..DIR_SEP..name..".sh"
+    local path = WWW_ROOT..DIR_SEP.."shs"..DIR_SEP..name..".sh"
 
     if ulib.exists(path) then
         std.header("text/plain")
