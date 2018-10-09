@@ -17,7 +17,7 @@
         "binary": false
     },
     "wasm": {
-            "mime": "application/wasm",
-            "binary": true
-        }
+        "mime": "application/wasm",
+        "binary": true
+    }
 }

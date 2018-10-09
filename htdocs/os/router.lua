@@ -27,15 +27,15 @@ require("common")
 local REGISTRY = {}
 -- set logging level
 REGISTRY.logger = Logger:new{ levels = {INFO = false, ERROR = true, DEBUG = false}}
-REGISTRY.db = DBHelper:new{db="sysdb"}
+--REGISTRY.db = DBHelper:new{db="sysdb"}
 REGISTRY.layout = 'default'
 REGISTRY.fileaccess = true
 
-REGISTRY.db:open()
+--REGISTRY.db:open()
 local router = Router:new{registry = REGISTRY}
 REGISTRY.router = router
 router:setPath(CONTROLLER_ROOT)
 
 router:delegate()
-if REGISTRY.db then REGISTRY.db:close() end
+--if REGISTRY.db then REGISTRY.db:close() end
 

@@ -3,7 +3,10 @@ databases
 htdocs/os/packages/packages.json
 htdocs/blog/google515401ba5e7aeab5.html
 htdocs/info/google515401ba5e7aeab5.html
+htdocs/os/README.md
 INFO.txt
 ERROR.txt
 DEBUG.txt
 vnc.conf
+robot.txt
+repo

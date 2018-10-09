@@ -5,7 +5,7 @@
 -- some global variables
 DIR_SEP = "/"
 WWW_ROOT = "/opt/www/htdocs/blog"
-HTTP_ROOT = "https://blog.lxsang.me/"
+HTTP_ROOT = "https://blog.lxsang.me"
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -14,12 +14,12 @@ MODEL_ROOT = BASE_FRW.."blog.models"
 -- file path: path/to/file
 VIEW_ROOT = WWW_ROOT..DIR_SEP.."views"
 LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
-POST_LIMIT = 10
+POST_LIMIT = 2
 -- require needed library
 require(BASE_FRW.."silk.api")
 
-if REQUEST.query.r then
-    REQUEST.query.r = REQUEST.query.r:gsub("%:", "/")
+if REQUEST.r then
+    REQUEST.r = REQUEST.r:gsub("%:", "/")
 end
 
 -- registry object store global variables
@@ -52,8 +52,8 @@ router:setPath(CONTROLLER_ROOT)
             }
         }
     }
-} ]]
-router:route('default', default_routes_dependencies )
+} 
+router:route('default', default_routes_dependencies )]]
 router:remap("index", "post")
 router:remap("r", "post")
 router:delegate()
