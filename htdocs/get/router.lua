@@ -24,16 +24,18 @@ function NotfoundController:index(...)
     if not name then
         return self:error("Unknown script")
     end
+    name = name:gsub("Controller",""):lower()
     local path = WWW_ROOT..DIR_SEP.."shs"..DIR_SEP..name..".sh"
 
     if ulib.exists(path) then
         std.header("text/plain")
         std.f(path)
     else
-        self:error("No script found")
+        self:error("No script found: "..path)
     end
     return false
 end
+
 
 -- registry object store global variables
 local REGISTRY = {}
