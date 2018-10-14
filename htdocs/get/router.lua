@@ -24,7 +24,7 @@ function NotfoundController:index(...)
     if not name then
         return self:error("Unknown script")
     end
-    name = name:gsub("Controller",""):lower()    
+    name = name:gsub("Controller",""):lower()
     local path = WWW_ROOT..DIR_SEP.."shs"..DIR_SEP..name..".sh"
 
     if ulib.exists(path) then
@@ -35,6 +35,7 @@ function NotfoundController:index(...)
     end
     return false
 end
+
 
 -- registry object store global variables
 local REGISTRY = {}
