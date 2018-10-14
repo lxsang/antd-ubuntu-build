@@ -14,7 +14,7 @@ MODEL_ROOT = BASE_FRW.."blog.models"
 -- file path: path/to/file
 VIEW_ROOT = WWW_ROOT..DIR_SEP.."views"
 LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
-POST_LIMIT = 2
+POST_LIMIT = 10
 -- require needed library
 require(BASE_FRW.."silk.api")
 
