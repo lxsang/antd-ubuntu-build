@@ -4,8 +4,12 @@
 -- ^\/apps\/+(.*)$ = /apps/router.lua?r=<1>&<query>
 -- some global variables
 DIR_SEP = "/"
-WWW_ROOT = "/opt/www/htdocs/blog"
-HTTP_ROOT = "https://blog.localhost:9192"
+WWW_ROOT = __ROOT__.."/blog"
+if HEADER.host then
+    HTTP_ROOT= "https://"..HEADER.host
+else
+    HTTP_ROOT = "https://blog.lxsang.me"
+end
 -- class path: path.to.class
 BASE_FRW = ""
 -- class path: path.to.class
@@ -14,7 +18,7 @@ MODEL_ROOT = BASE_FRW.."blog.models"
 -- file path: path/to/file
 VIEW_ROOT = WWW_ROOT..DIR_SEP.."views"
 LOG_ROOT = WWW_ROOT..DIR_SEP.."logs"
-POST_LIMIT = 10
+POST_LIMIT = 2
 -- require needed library
 require(BASE_FRW.."silk.api")
 
