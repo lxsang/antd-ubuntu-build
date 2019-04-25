@@ -52,7 +52,8 @@
                             </span>
                             <span class="fa fa-quote-right"></span>
                         </p>
-                        <a href="https://info.lxsang.me" class ="about">Find out more about me</a>
+                         <a href="https://info.lxsang.me" class ="about">Find out more about me</a>
+                        <a href="https://blog.lxsang.me" class ="about">Read blog</a>
                     </div>
                 </div>
             </div>
