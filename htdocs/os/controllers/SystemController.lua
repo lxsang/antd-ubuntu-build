@@ -125,7 +125,8 @@ function SystemController:apigateway(...)
                 echo(e)
             end
         elseif data.path then
-            r, e = loadfile(data.path)
+            local ospath = require("vfs").ospath(data.path)
+            r, e = loadfile(ospath)
             if r then
                 local status, result = pcall(r, data.parameters)
                 if (status) then
@@ -195,3 +196,4 @@ function SystemController:apigateway(...)
         echo('{"error":"User unauthorized. Please login"}')
     end
 end
+
