@@ -8,7 +8,7 @@ WWW_ROOT = __ROOT__.."/get"
 if HEADER.Host then
     HTTP_ROOT= "https://"..HEADER.Host
 else
-    HTTP_ROOT = "https://get.makeand.run"
+    HTTP_ROOT = "https://get.bitdojo.dev"
 end
 -- class path: path.to.class
 BASE_FRW = ""

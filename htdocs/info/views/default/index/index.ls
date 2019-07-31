@@ -7,7 +7,7 @@
         <div class="container<?=active?>" id =<?='"toc'..v.id..'"'?>>
             <h1><?=v.name:gsub("^%d+%.","")?></h1>
         <?lua
-            active = ''
+            --active = ''
             for l,child in pairs(v.children) do
         ?>
             <div class="sub-container">
@@ -54,7 +54,7 @@
             <div class="container<?=active?>" id =<?='"toc'..v.id..'"'?>>
                 <h1><?=v.name?></h1>
             <?lua
-            active = ''
+            --active = ''
             if v.sections then
                 for m, entry in pairs(v.sections) do
             ?>
