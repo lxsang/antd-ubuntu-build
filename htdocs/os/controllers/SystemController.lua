@@ -196,4 +196,3 @@ function SystemController:apigateway(...)
         echo('{"error":"User unauthorized. Please login"}')
     end
 end
-
