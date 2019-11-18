@@ -19,7 +19,7 @@ else
     tar xzf "$1.tar.gz"
     [[ -d "$1" ]] || { echo "Cannot extract the tarball"; exit 1; }
     cd "$1"
-    ./configure --prefix=/opt/www --enable-debug=yes
-    make
+    CPPFLAGS='-I/usr/local/ssl/include/' LDFLAGS='-L/usr/local/ssl/lib' ./configure --prefix=/opt/www --enable-debug=yes
+    CPPFLAGS='-I/usr/local/ssl/include/' LDFLAGS='-L/usr/local/ssl/lib' make
     sudo make install
     echo "plugin installed"
