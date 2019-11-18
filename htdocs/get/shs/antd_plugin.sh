@@ -23,3 +23,4 @@ else
     CPPFLAGS='-I/usr/local/ssl/include/' LDFLAGS='-L/usr/local/ssl/lib' make
     sudo make install
     echo "plugin installed"
+fi
