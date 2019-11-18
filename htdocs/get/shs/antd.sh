@@ -9,6 +9,7 @@ then
     exit 1
 else
     mkdir -p /tmp/antd
+    rm -rf /tmp/antd/*
     echo "Downloading antd version $1"
     cd /tmp/antd
     wget --no-check-certificate "https://github.com/lxsang/ant-http/raw/master/dist/antd-$1.tar.gz"
