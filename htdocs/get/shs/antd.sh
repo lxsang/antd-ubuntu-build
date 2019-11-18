@@ -17,8 +17,8 @@ else
     tar xzf "antd-$1.tar.gz"
     [[ -d "antd-$1" ]] || { echo "Cannot extract the tarball"; exit 1; }
     cd "antd-$1"
-    ./configure --prefix=/usr --enable-debug=yes
-    make
+    CPPFLAGS='-I/usr/local/ssl/include/' LDFLAGS='-L/usr/local/ssl/lib' ./configure --prefix=/usr --enable-debug=yes
+    CPPFLAGS='-I/usr/local/ssl/include/' LDFLAGS='-L/usr/local/ssl/lib' make
     sudo make install
     echo "Server installed"
 fi
