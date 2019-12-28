@@ -13,11 +13,14 @@ To do this, let's edit the smtp line and change it this way:
 ```
 smtp      inet  n       -       -       -       -       smtpd
         -o content_filter=myhook:dummy
-The -o content_filter=myhook:dummy tells Postfix to run the filter for any mail arriving via the SMTP delivery. Please note that is you are sending mails using the "sendmail" command, the filter will not trigger. In this case, add the option after the "pickup" delivery method:
+```
 
+The -o content_filter=myhook:dummy tells Postfix to run the filter for any mail arriving via the SMTP delivery. Please note that is you are sending mails using the "sendmail" command, the filter will not trigger. In this case, add the option after the "pickup" delivery method:
 ```
 pickup    fifo  n       -       -       60      1       pickup
     -o content_filter=myhook:dummy
+```
+
 Do not forget: after changing a configuration file, you must run the command:
 ```
 postfix reload
